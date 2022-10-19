@@ -109,7 +109,7 @@
 
                         <div class="form-group">
                             <label for="capacity">Number of Students</label>
-                            <input type="text" class="form-control" style="width: 15%" name="capacity" required>
+                            <input type="number" max="300" class="form-control" style="width: 15%" name="capacity" required>
                         </div>
 
                     </div>
