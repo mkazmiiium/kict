@@ -39,3 +39,6 @@ Route::resource('addbooking', DecentController::class);
 Route::get('/Centralised-booking', [CentralisedController::class, 'index']);
 Route::get('add_booking_centralise_exam', [CentralisedController::class, 'dropmenuprogram']);
 Route::resource('addbooking_centralise_exam', CentralisedController::class);
+
+
+//test from azmi
