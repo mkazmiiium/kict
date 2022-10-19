@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// this is the system for KICT internal used.
+
 Route::get('/', function () {
     return view('home');
 });
