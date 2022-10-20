@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DecentController;
 use App\Http\Controllers\CentralisedController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+// Route::get('/', function () {
+//     return view('home');
+// });
+
+Route::get('/', [HomeController::class, 'index']);
 
 Route::middleware([
     'auth:sanctum',
@@ -41,4 +44,3 @@ Route::get('add_booking_centralise_exam', [CentralisedController::class, 'dropme
 Route::resource('addbooking_centralise_exam', CentralisedController::class);
 
 
-//test from azmi
