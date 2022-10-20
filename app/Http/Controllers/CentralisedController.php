@@ -22,6 +22,7 @@ class CentralisedController extends Controller
         ->join('courses', 'courses.course_id', '=', 'centraliseds.course_id')
         ->join('staff', 'staff.staff_id', '=', 'centraliseds.staff_id')
         ->select('centraliseds.id', 'centraliseds.program_id', 'centraliseds.course_id', 'courses.course_name', 'centraliseds.staff_id', 'staff.staff_name', 'centraliseds.student_capacity', 'centraliseds.sections')
+        ->orderBy('centraliseds.id', 'desc')
         ->get();
 
         return view('centralised.view', ['centraliseds'=>$centraliseds]);

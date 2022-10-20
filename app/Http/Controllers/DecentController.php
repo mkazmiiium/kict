@@ -25,6 +25,7 @@ class DecentController extends Controller
         ->join('courses', 'courses.course_id', '=', 'decentraliseds.course_id')
         ->join('staff', 'staff.staff_id', '=', 'decentraliseds.staff_id')
         ->select('decentraliseds.id', 'decentraliseds.program_id', 'decentraliseds.course_id', 'courses.course_name', 'decentraliseds.staff_id', 'staff.staff_name', 'decentraliseds.booking_date', 'decentraliseds.booking_slot', 'decentraliseds.student_capacity', 'decentraliseds.sections', 'decentraliseds.assessment_type', 'decentraliseds.assessment_time')
+        ->orderBy('decentraliseds.id', 'desc')
         ->get();
 
         return view('decentralised.view', ['decentraliseds'=>$decentraliseds]);
