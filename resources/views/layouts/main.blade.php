@@ -446,7 +446,7 @@
     <strong>Copyright &copy; 2021-2025 Academic Office </a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-      <b><em>Developed by MKA for KICT Academic Office</b> Beta Ver. </em>
+      <b><em>Project by CITINOV for KICT Academic Office</b> Beta Ver. </em>
     </div>
   </footer>
 
