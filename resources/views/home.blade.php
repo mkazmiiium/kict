@@ -73,9 +73,9 @@
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>0</h3>
+                  <h3> {{$decentraliseds_count + $centraliseds_count}}</h3>
 
-                  <p>Future Project</p>
+                  <p>TOTAL ASSESSMENT RECORDS</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-pie-graph"></i>
