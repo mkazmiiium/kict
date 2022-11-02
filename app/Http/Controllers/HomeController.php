@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Decentralised;
+// use App\Models\Decentralised;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -16,13 +16,22 @@ class HomeController extends Controller
     public function index()
     {
         $decentraliseds_count = DB::table('decentraliseds')
+        ->where('deleted', 'no')
         ->count();
 
         $centraliseds_count = DB::table('centraliseds')
+        ->where('deleted', 'no')
         ->count();
 
-        return view('home', ['decentraliseds_count'=>$decentraliseds_count], ['centraliseds_count'=>$centraliseds_count]);
-        // return view('home', $decentraliseds_count, $centraliseds_count);
+        $pg_decentraliseds_count = DB::table('p_g_decentraliseds')
+        ->where('deleted', 'no')
+        ->count();
+
+        $pg_centraliseds_count = DB::table('p_g_centraliseds')
+        ->where('deleted', 'no')
+        ->count();
+
+        return view('home', compact(['decentraliseds_count', 'centraliseds_count', 'pg_decentraliseds_count', 'pg_centraliseds_count']));
     }
 
     /**

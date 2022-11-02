@@ -24,8 +24,9 @@ class DecentController extends Controller
         $decentraliseds = DB::table('decentraliseds')
         ->join('courses', 'courses.course_id', '=', 'decentraliseds.course_id')
         ->join('staff', 'staff.staff_id', '=', 'decentraliseds.staff_id')
-        ->select('decentraliseds.id', 'decentraliseds.program_id', 'decentraliseds.course_id', 'courses.course_name', 'decentraliseds.staff_id', 'staff.staff_name', 'decentraliseds.booking_date', 'decentraliseds.booking_slot', 'decentraliseds.student_capacity', 'decentraliseds.sections', 'decentraliseds.assessment_type', 'decentraliseds.assessment_time')
+        ->select('decentraliseds.id', 'decentraliseds.program_id', 'decentraliseds.course_id', 'courses.course_name', 'decentraliseds.staff_id', 'staff.staff_name', 'decentraliseds.booking_date', 'decentraliseds.booking_slot', 'decentraliseds.student_capacity', 'decentraliseds.sections', 'decentraliseds.assessment_type', 'decentraliseds.assessment_time', 'decentraliseds.deleted')
         ->orderBy('decentraliseds.id', 'desc')
+        ->where('decentraliseds.deleted', 'no')
         ->get();
 
         return view('decentralised.view', ['decentraliseds'=>$decentraliseds]);
@@ -82,10 +83,12 @@ class DecentController extends Controller
         $decentralised->sections=$sections2;
         $decentralised->assessment_type=$request->assessmentType;
         $decentralised->assessment_time=$request->inClass;
+        $decentralised->deleted='no';
 
         $decentraliseds_count = DB::table('decentraliseds')
         ->where('booking_date', $date2)
         ->where('booking_slot', $request->bookingslot)
+        ->where('deleted', 'no')
         ->count();
 
         if ($request->bookingslot == '') {
@@ -145,21 +148,21 @@ class DecentController extends Controller
         //
     }
 
-    public function viewsearch(Request $request)
-    {
-        $decentraliseds = DB::table('decentraliseds')
-        ->join('courses', 'courses.course_id', '=', 'decentraliseds.course_id')
-        ->join('staff', 'staff.staff_id', '=', 'decentraliseds.staff_id')
-        ->select('decentraliseds.id', 'decentraliseds.course_id', 'courses.course_name', 'decentraliseds.staff_id', 'staff.staff_name', 'decentraliseds.booking_date', 'decentraliseds.booking_slot', 'decentraliseds.student_capacity', 'decentraliseds.program_id', 'decentraliseds.sections', 'decentraliseds.assessment_type')
-        ->where('decentraliseds.course_id', 'like', '%' .$request->search. '%')
-        ->orwhere('courses.course_name', 'like', '%' .$request->search. '%')
-        ->orwhere('staff.staff_id', 'like', '%' .$request->search. '%')
-        ->orwhere('staff.staff_name', 'like', '%' .$request->search. '%')
-        ->orwhere('decentraliseds.booking_slot', 'like', '%' .$request->search. '%')
-        ->orderBy('decentraliseds.course_id')
-        ->get();
-        return view('decentralised.view', ['decentraliseds'=>$decentraliseds]);
-    }
+    // public function viewsearch(Request $request)
+    // {
+    //     $decentraliseds = DB::table('decentraliseds')
+    //     ->join('courses', 'courses.course_id', '=', 'decentraliseds.course_id')
+    //     ->join('staff', 'staff.staff_id', '=', 'decentraliseds.staff_id')
+    //     ->select('decentraliseds.id', 'decentraliseds.course_id', 'courses.course_name', 'decentraliseds.staff_id', 'staff.staff_name', 'decentraliseds.booking_date', 'decentraliseds.booking_slot', 'decentraliseds.student_capacity', 'decentraliseds.program_id', 'decentraliseds.sections', 'decentraliseds.assessment_type')
+    //     ->where('decentraliseds.course_id', 'like', '%' .$request->search. '%')
+    //     ->orwhere('courses.course_name', 'like', '%' .$request->search. '%')
+    //     ->orwhere('staff.staff_id', 'like', '%' .$request->search. '%')
+    //     ->orwhere('staff.staff_name', 'like', '%' .$request->search. '%')
+    //     ->orwhere('decentraliseds.booking_slot', 'like', '%' .$request->search. '%')
+    //     ->orderBy('decentraliseds.course_id')
+    //     ->get();
+    //     return view('decentralised.view', ['decentraliseds'=>$decentraliseds]);
+    // }
 
     public function dropmenuprogram()
     {

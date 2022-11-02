@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Centralised;
+
+use App\Models\Course;
+use App\Models\PGCentralised;
+use App\Models\PGProgram;
+use Illuminate\Http\Request;
+// use App\Models\PGCentralised;
 use App\Models\Programs;
 use App\Models\Staff;
-use App\Models\Course;
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CentralisedController extends Controller
+class PGCentralisedController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +20,15 @@ class CentralisedController extends Controller
      */
     public function index()
     {
-        $centraliseds = DB::table('centraliseds')
-        ->join('courses', 'courses.course_id', '=', 'centraliseds.course_id')
-        ->join('staff', 'staff.staff_id', '=', 'centraliseds.staff_id')
-        ->select('centraliseds.id', 'centraliseds.program_id', 'centraliseds.course_id', 'courses.course_name', 'centraliseds.staff_id', 'staff.staff_name', 'centraliseds.student_capacity', 'centraliseds.sections', 'centraliseds.deleted')
-        ->orderBy('centraliseds.id', 'desc')
-        ->where('centraliseds.deleted', 'no')
+        $pgcentraliseds = DB::table('p_g_centraliseds')
+        ->join('courses', 'courses.course_id', '=', 'p_g_centraliseds.course_id')
+        ->join('staff', 'staff.staff_id', '=', 'p_g_centraliseds.staff_id')
+        ->select('p_g_centraliseds.id', 'p_g_centraliseds.program_id', 'p_g_centraliseds.course_id', 'courses.course_name', 'p_g_centraliseds.staff_id', 'staff.staff_name', 'p_g_centraliseds.student_capacity', 'p_g_centraliseds.sections', 'p_g_centraliseds.deleted')
+        ->orderBy('p_g_centraliseds.id', 'desc')
+        ->where('p_g_centraliseds.deleted', 'no')
         ->get();
 
-        return view('centralised.view', ['centraliseds'=>$centraliseds]);
+        return view('pgcentralised.view', ['pgcentraliseds'=>$pgcentraliseds]);
     }
 
     /**
@@ -61,31 +63,31 @@ class CentralisedController extends Controller
         $sections1 = $request->sections;
         $sections2 = implode(' , ' , $sections1);
 
-        $centralised= new Centralised();
-        $centralised->course_id=$request->courseId;
-        $centralised->staff_id=$request->staffId;
-        // $centralised->booking_date=$request->booking_date;
-        // $centralised->booking_slot=$request->bookingslot;
-        $centralised->student_capacity=$request->capacity;
-        $centralised->created_at=today();
-        $centralised->updated_at=today();
-        $centralised->program_id=$request->programId;
-        $centralised->sections=$sections2;
-        $centralised->deleted='no';
-        // $centralised->assessment_type=$request->assessmentType;
+        $PGCentralised= new PGCentralised();
+        $PGCentralised->course_id=$request->courseId;
+        $PGCentralised->staff_id=$request->staffId;
+        // $PGCentralised->booking_date=$request->booking_date;
+        // $PGCentralised->booking_slot=$request->bookingslot;
+        $PGCentralised->student_capacity=$request->capacity;
+        $PGCentralised->created_at=today();
+        $PGCentralised->updated_at=today();
+        $PGCentralised->program_id=$request->programId;
+        $PGCentralised->sections=$sections2;
+        $PGCentralised->deleted='no';
+        // $PGCentralised->assessment_type=$request->assessmentType;
 
-        $centralised->save();
-        return redirect('Centralised-booking')->with('success', 'Data Sucessfully Saved!! Thank You.');
+        $PGCentralised->save();
+        return redirect('PGCentralised-booking')->with('success', 'Data Sucessfully Saved!! Thank You.');
 
-        // $centraliseds_count = DB::table('centraliseds')
+        // $PGCentralised = DB::table('centraliseds')
         // ->where('booking_date', $request->booking_date)
         // ->where('booking_slot', $request->bookingslot)
         // ->count();
 
-        // if ($centraliseds_count > 0) {
+        // if ($PGCentralised > 0) {
         //     return redirect('add_booking')->with('not success', 'Booking Date and Time Clash!! Please RE-TRY');
         // } else {
-        //     $decentralised->save();
+        //     $PGCentralised->save();
         //     return redirect('Decentralised-booking')->with('success', 'Data Sucessfully Saved!! Thank You.');
         // }
     }
@@ -137,31 +139,10 @@ class CentralisedController extends Controller
 
     public function dropmenuprogram()
     {
-        // $courses = Course::orderBy('course_id')->get();
-        // $staffs = Staff::orderBy('staff_id')->get();
-        // return view ('decentralised.add')->with(compact('courses', 'staffs'));
-
-        // $programs = DB::table('programs')->pluck('program_id','program_name');
-        // return view('decentralised.add',compact('programs'));
-
-        $programs['programs'] = Programs::orderBy('program_id')->get(['program_id', 'program_name']);
+        $pgprograms['pgprograms'] = PGProgram::orderBy('program_id')->get(['program_id', 'program_name']);
         $staffs['staffs'] = Staff::orderBy('staff_name')->get(['staff_id', 'staff_name']);
-        // $staffs = Staff::orderBy('staff_id')->get();
-        // return view ('decentralised.add')->with(compact('programs', 'staffs'));
-        return view('centralised.add', $programs, $staffs);
+        return view('pgcentralised.add', $pgprograms, $staffs);
     }
-
-    // public function dropmenucourse($id)
-    // {
-    //     // $courses = Course::orderBy('course_id')->get();
-    //     // $staffs = Staff::orderBy('staff_id')->get();
-    //     // return view ('decentralised.add')->with(compact('courses', 'staffs'));
-
-    //     $courses = DB::table("courses")
-    //     ->where("course_id",$id)
-    //     ->pluck('course_id','course_name');
-    //     return json_encode($courses);
-    // }
 
     public function fetchCourse(Request $request)
     {

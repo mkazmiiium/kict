@@ -191,25 +191,66 @@
         <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-            <li class="nav-header">BOOKING SYSTEM</li>
+               <li class="nav-header">BOOKING SYSTEM</li>
                 <li class="nav-item" class="nav-link">
-                    <a href="/Decentralised-booking" class="nav-link">
-                        <i class="nav-icon fas fa-book-reader"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa fa-user-md" aria-hidden="true"></i>
                         <p>
-                        Final Assessment
+                          Undergraduate
+                          <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Decentralised-booking" class="nav-link">
+                                <i class="nav-icon fas fa-book-reader"></i>
+                                    <p>
+                                    Final Assessment
+                                    </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" class="nav-link">
+                            <a href="/Centralised-booking" class="nav-link">
+                                <i class="nav-icon fas fa-pencil-alt"></i>
+                                <p>
+                                Centralised Examination
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item" class="nav-link">
-                    <a href="/Centralised-booking" class="nav-link">
-                        <i class="nav-icon fas fa-pencil-alt"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa fa-graduation-cap" aria-hidden="true"></i>
                         <p>
-                        Centralised Examination
+                          Postgraduate
+                          <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/PGDecentralised-booking" class="nav-link">
+                                <i class="nav-icon fas fa-book-reader"></i>
+                                <p>
+                                    Final Assessment
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" class="nav-link">
+                            <a href="/PGCentralised-booking" class="nav-link">
+                                <i class="nav-icon fas fa-pencil-alt"></i>
+                                <p>
+                                    Centralised Examination
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </li>
+
             {{-- <a href="#" class="nav-link">
               <i class="nav-icon fa fa-user-circle" aria-hidden="true"></i>
               <p>
@@ -237,6 +278,8 @@
                     </a>
                 </li>
             </ul>
+
+
           </li>
           <li class="nav-item" class="nav-link">
             <a href="#" class="nav-link">

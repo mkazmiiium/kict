@@ -30,7 +30,7 @@
                 <div class="inner">
                   <h3>{{ $decentraliseds_count }}</h3>
 
-                  <p>Final Assessment Records</p>
+                  <p>UG FA Records</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-bag"></i>
@@ -45,7 +45,7 @@
                 <div class="inner">
                   <h3>{{ $centraliseds_count }}</sup></h3>
 
-                  <p>Centalised Examination Records</p>
+                  <p>UG FE Records</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-stats-bars"></i>
@@ -58,14 +58,14 @@
               <!-- small box -->
               <div class="small-box bg-warning">
                 <div class="inner">
-                  <h3>0</h3>
+                  <h3>{{ $pg_decentraliseds_count }}</h3>
 
-                  <p>PG Assessment Records</p>
+                  <p>PG FA Records</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-person-add"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="/PGDecentralised-booking" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -73,14 +73,14 @@
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3> {{$decentraliseds_count + $centraliseds_count}}</h3>
+                  <h3> {{ $pg_centraliseds_count }}</h3>
 
-                  <p>TOTAL ASSESSMENT RECORDS</p>
+                  <p>PG FE Records</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="/PGCentralised-booking" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->

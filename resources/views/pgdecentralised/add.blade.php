@@ -9,19 +9,19 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="home">Home</a></li>
-                        <li class="breadcrumb-item active">Add Final Assessment Booking</li>
+                        <li class="breadcrumb-item active">Add New PG Final Assessment Booking</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <form action="addbooking" method="POST" enctype="multipart/form-data">
+    <form action="pg_addbooking" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="col-md-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Add New Final Assessment Booking</h3>
+                    <h3 class="card-title">Add New PG Final Assessment Booking</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -33,9 +33,9 @@
                             <select name="programId" id="program-dropdown" class="form-control select2" style="width: 100%"
                                 required>
                                 <option value="">-- Select Programme --</option>
-                                @foreach ($programs as $program)
-                                    <option value="{{ $program->program_id }}">
-                                        {{ $program->program_name }} ({{ $program->program_id }})
+                                @foreach ($pgprograms as $pgprogram)
+                                    <option value="{{ $pgprogram->program_id }}">
+                                        {{ $pgprogram->program_name }} ({{ $pgprogram->program_id }})
                                     </option>
                                 @endforeach
                             </select>
@@ -115,10 +115,10 @@
                             <label for="assessmentType">Assessment Type</label>
                             <select name="assessmentType" class="form-control select2" style="width: 30%" required>
                                 <option value="">-- Select Assessment Type -- </option>
-                                <option value="Final Assessment - Decentralized Exam">Final Assessment - Decentralized Exam
-                                </option>
-                                <option value="Final Assessment - Test">Final Assessment - Test</option>
-                                <option value="Final Assessment - Take Home">Final Assessment - Take Home</option>
+                                <option value="Final Assessment  - Test, Research Proposal, Research Paper">Final Assessment  - Test, Research Proposal, Research Paper</option>
+                                <option value="Final Exam">Final Exam</option>
+                                <option value="Decentralised">Decentralised</option>
+                                <option value="Datathon">Datathon</option>
                             </select>
                         </div>
 

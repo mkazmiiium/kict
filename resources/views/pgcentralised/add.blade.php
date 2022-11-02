@@ -1,3 +1,5 @@
+
+
 @extends('layouts.main')
 @section('content')
     <div class="content-header">
@@ -9,19 +11,19 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="home">Home</a></li>
-                        <li class="breadcrumb-item active">Add Final Assessment Booking</li>
+                        <li class="breadcrumb-item active">PG Centralised Examination Booking</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <form action="addbooking" method="POST" enctype="multipart/form-data">
+    <form action="pg_addbooking_centralise_exam" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="col-md-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Add New Final Assessment Booking</h3>
+                    <h3 class="card-title">Add New PG Centralised Examination Booking</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -33,9 +35,9 @@
                             <select name="programId" id="program-dropdown" class="form-control select2" style="width: 100%"
                                 required>
                                 <option value="">-- Select Programme --</option>
-                                @foreach ($programs as $program)
-                                    <option value="{{ $program->program_id }}">
-                                        {{ $program->program_name }} ({{ $program->program_id }})
+                                @foreach ($pgprograms as $pgprogram)
+                                    <option value="{{ $pgprogram->program_id }}">
+                                        {{ $pgprogram->program_name }} ({{ $pgprogram->program_id }})
                                     </option>
                                 @endforeach
                             </select>
@@ -79,48 +81,31 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="inClass">Assessment Time</label>
-                            <select onchange="check()" name="inClass" id="inClass-dropdown" class="form-control select2" style="width: 50%"
-                                required>
-                                <option value="">-- Select Time --</option>
-                                <option value="in-class">In Class Time</option>
-                                <option value="outside-class">Outside Class Time</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" name="booking_date" runat="server" data-target="#reservationdate"/>
-                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="bookingslot">Booking Slot</label>
-                            <select name="bookingslot" id="bookingslot1" class="form-control select2" style="width: 30%" disabled required>
-                                <option value="">-- Select Time Slot -- </option>
-                                <option value="9:00am - 1:00pm">9:00am - 1:00pm </option>
-                                <option value="2:00pm - 5:00pm">2:00pm - 5:00pm</option>
-                                <option value="5:00pm - 8:00pm">5:00pm - 8:00pm</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="assessmentType">Assessment Type</label>
-                            <select name="assessmentType" class="form-control select2" style="width: 30%" required>
+                            <select name="assessmentType" class="form-control select2" style="width: 50%" required>
                                 <option value="">-- Select Assessment Type -- </option>
                                 <option value="Final Assessment - Decentralized Exam">Final Assessment - Decentralized Exam
                                 </option>
                                 <option value="Final Assessment - Test">Final Assessment - Test</option>
                                 <option value="Final Assessment - Take Home">Final Assessment - Take Home</option>
                             </select>
-                        </div>
+                        </div> --}}
+
+                        {{-- <div class="form-group">
+                            <label for="booking_date">Booking Date</label>
+                            <input type="date" class="form-control" style="width: 30%" name="booking_date" min="2022-12-05" max="2023-01-26" required>
+                        </div> --}}
+
+                        {{-- <div class="form-group">
+                            <label for="bookingslot">Booking Slot</label>
+                            <select name="bookingslot" class="form-control select2" style="width: 30%" required>
+                                <option value="">-- Select Time Slot -- </option>
+                                <option value="9:00am - 1:00pm">9:00am - 1:00pm </option>
+                                <option value="2:30pm - 5:30pm">2:00pm - 5:00pm</option>
+                                <option value="5:00pm - 8:00pm">5:00pm - 8:00pm</option>
+                            </select>
+                        </div> --}}
 
                         <div class="form-group">
                             <label for="capacity">Number of Students</label>
@@ -150,30 +135,7 @@
 <link rel="stylesheet" href="{{asset('multiselect/jquery.multiselect.css')}}">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
-
 <script>
-    $(function () {
-        $('#reservationdate').datetimepicker({
-            format: 'L',
-            dateFormat: 'yyyy-mm-dd',
-            todayHighlight: true,
-            minDate: new Date('2022-12-5'),
-            maxDate: new Date('2023-1-26'),
-            multidate: false,
-            daysOfWeekHighlighted: "0, 5, 6",
-            language: 'en',
-            daysOfWeekDisabled: [0, 5, 6]
-        });
-    })
-
-    function check(){
-    if(document.getElementById('inClass-dropdown').value=='in-class')
-        // document.getElementById('bookingslot1').value = "Class-Time";
-        document.getElementById('bookingslot1').disabled=true;
-    else
-        document.getElementById('bookingslot1').disabled=false;
-    }
-
     $(document).ready(function() {
 
         /*------------------------------------------
@@ -205,6 +167,7 @@
             });
         });
 
+        // $('select[multiple]').multiselect();
         $('#sections').multiselect({
             columns: 1,
             placeholder: 'Select Languages',
@@ -216,6 +179,26 @@
         State Dropdown Change Event
         --------------------------------------------
         --------------------------------------------*/
-
+        // azmi
+        // $('#state-dropdown').on('change', function () {
+        //     var idState = this.value;
+        //     $("#city-dropdown").html('');
+        //     $.ajax({
+        //         url: "{{ url('api/fetch-cities') }}",
+        //         type: "POST",
+        //         data: {
+        //             state_id: idState,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         dataType: 'json',
+        //         success: function (res) {
+        //             $('#city-dropdown').html('<option value="">-- Select City --</option>');
+        //             $.each(res.cities, function (key, value) {
+        //                 $("#city-dropdown").append('<option value="' + value
+        //                     .id + '">' + value.name + '</option>');
+        //             });
+        //         }
+        //     });
+        // });
     });
 </script>
