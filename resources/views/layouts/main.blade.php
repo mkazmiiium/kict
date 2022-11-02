@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{config('app.name')}}</title>
 
+  @php
+        $browser = request()->userAgent();
+        if (!strstr($browser, 'Chrome')) {
+            echo 'Please use Chrome Browser to Access the System';
+            die();
+        }
+  @endphp
+
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
