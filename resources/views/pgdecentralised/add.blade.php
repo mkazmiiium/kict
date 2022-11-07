@@ -158,7 +158,7 @@
             dateFormat: 'yyyy-mm-dd',
             todayHighlight: true,
             minDate: new Date('2022-12-5'),
-            maxDate: new Date('2023-1-26'),
+            maxDate: new Date('2023-2-16'),
             multidate: false,
             daysOfWeekHighlighted: "0, 5, 6",
             language: 'en',
