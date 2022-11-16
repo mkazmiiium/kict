@@ -8,7 +8,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item active">Add New PG Final Assessment Booking</li>
                     </ol>
                 </div><!-- /.col -->
@@ -160,9 +160,9 @@
             minDate: new Date('2022-12-5'),
             maxDate: new Date('2023-2-16'),
             multidate: false,
-            daysOfWeekHighlighted: "0, 5, 6",
-            language: 'en',
-            daysOfWeekDisabled: [0, 5, 6]
+            // daysOfWeekHighlighted: "0, 5, 6",
+            language: 'en'
+            // daysOfWeekDisabled: [0, 5, 6]
         });
     })
 
