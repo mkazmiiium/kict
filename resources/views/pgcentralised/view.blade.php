@@ -38,7 +38,7 @@
 
         <div class="col-md2">
                 {{-- <button type="button" class="btn btn-block btn-primary btn-lg">Primary</button> --}}
-                <a href="/pg_add_booking_centralise_exam" class="btn btn-block btn-primary btn-lg">Add New PG Booking</a>
+                <a href="/pg_add_booking_centralise_exam" class="btn disabled btn-block btn-primary btn-lg">Add New PG Booking</a>
         </div>
 
         <p></p>
