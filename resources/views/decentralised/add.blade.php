@@ -160,9 +160,9 @@
             minDate: new Date('2023-05-02'),
             maxDate: new Date('2023-06-15'),
             multidate: false,
-            daysOfWeekHighlighted: "0, 5, 6",
+            daysOfWeekHighlighted: "0, 5",
             language: 'en',
-            daysOfWeekDisabled: [0, 5, 6]
+            daysOfWeekDisabled: [0, 5]
         });
     })
 
