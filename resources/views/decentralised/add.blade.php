@@ -170,6 +170,7 @@
     if(document.getElementById('inClass-dropdown').value=='in-class')
         // document.getElementById('bookingslot1').value = "Class-Time";
         document.getElementById('bookingslot1').disabled=true;
+
     else
         document.getElementById('bookingslot1').disabled=false;
     }
