@@ -142,6 +142,12 @@
 @endsection
 
 
+{{-- date reset --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -152,8 +158,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
 
 <script>
-    $(function () {
+    function check(){
+        $('#reservationdate').datetimepicker('destroy');
+
+        if(document.getElementById('inClass-dropdown').value=='in-class') {
+        document.getElementById('bookingslot1').disabled=true;
+
+        $(function () {
         $('#reservationdate').datetimepicker({
+            format: 'L',
+            dateFormat: 'yyyy-mm-dd',
+            todayHighlight: true,
+            minDate: new Date('2023-12-17'),
+            maxDate: new Date('2024-01-18'),
+            multidate: false,
+            daysOfWeekHighlighted: "0, 6",
+            language: 'en',
+            daysOfWeekDisabled: [0, 6]
+        });
+    })
+    }
+    else {
+        document.getElementById('bookingslot1').disabled=false;
+
+        $(function () {
+            $('#reservationdate').datetimepicker({
             format: 'L',
             dateFormat: 'yyyy-mm-dd',
             todayHighlight: true,
@@ -165,14 +194,7 @@
             daysOfWeekDisabled: [0, 6]
         });
     })
-
-    function check(){
-    if(document.getElementById('inClass-dropdown').value=='in-class')
-        // document.getElementById('bookingslot1').value = "Class-Time";
-        document.getElementById('bookingslot1').disabled=true;
-
-    else
-        document.getElementById('bookingslot1').disabled=false;
+    }
     }
 
     $(document).ready(function() {
