@@ -158,7 +158,7 @@
             dateFormat: 'yyyy-mm-dd',
             todayHighlight: true,
             minDate: new Date('2024-05-13'),
-            maxDate: new Date('2024-06-23'),
+            maxDate: new Date('2024-07-16'),
             multidate: false,
             // daysOfWeekHighlighted: "0, 5, 6",
             language: 'en'
