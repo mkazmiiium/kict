@@ -37,8 +37,7 @@
     <div class="card-body">
 
         <div class="col-md2">
-                {{-- <button type="button" class="btn btn-block btn-primary btn-lg">Primary</button> --}}
-                {{-- <a href="/add_booking" class="btn btn-block btn-primary btn-lg">Add New Booking</a> --}}
+                <a href="/add_booking" class="btn btn-block btn-primary btn-lg">Add New Booking</a>
         </div>
 
         <p></p>
