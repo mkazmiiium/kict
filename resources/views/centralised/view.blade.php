@@ -37,7 +37,8 @@
     <div class="card-body">
 
         <div class="col-md2">
-                <a href="/add_booking_centralise_exam" class="btn btn-block btn-primary btn-lg">Add New Booking</a>
+          <!-- To delete submission button -->
+          <!-- <a href="/add_booking_centralise_exam" class="btn btn-block btn-primary btn-lg">Add New Booking</a> -->
         </div>
 
         <p></p>

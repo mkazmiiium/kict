@@ -37,7 +37,8 @@
     <div class="card-body">
 
         <div class="col-md2">
-                <a href="/pg_add_booking_centralise_exam" class="btn btn-block btn-primary btn-lg">Add New PG Booking</a>
+          <!-- To delete submission button -->
+          <!-- <a href="/pg_add_booking_centralise_exam" class="btn btn-block btn-primary btn-lg">Add New PG Booking</a> -->
         </div>
 
         <p></p>
