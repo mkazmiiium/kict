@@ -38,7 +38,7 @@
 
         <div class="col-md2">
           <!-- To delete submission button -->
-          <!-- <a href="/pg_add_booking" class="btn btn-block btn-primary btn-lg">Add New PG Booking</a> -->
+          <a href="/pg_add_booking" class="btn btn-block btn-primary btn-lg">Add New PG Booking</a>
         </div>
 
         <p></p>
