@@ -6,7 +6,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Dashboard <strong>Semester 1 2024/2025</strong></h1>
+              <h1 class="m-0">Dashboard <strong>Semester 2 2024/2025</strong></h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">

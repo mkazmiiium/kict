@@ -117,8 +117,8 @@
                                 <option value="">-- Select Assessment Type -- </option>
                                 <option value="Final Assessment - Decentralized Exam">Final Assessment - Decentralized Exam
                                 </option>
-                                <option value="Final Assessment - Test">Final Assessment - Test</option>
-                                <option value="Final Assessment - Take Home">Final Assessment - Take Home</option>
+                                <option value="Final Assessment - Alternative">Final Assessment - Alternative</option>
+                                <!-- <option value="Final Assessment - Take Home">Final Assessment - Take Home</option> -->
                             </select>
                         </div>
 
@@ -169,8 +169,8 @@
             format: 'L',
             dateFormat: 'yyyy-mm-dd',
             todayHighlight: true,
-            minDate: new Date('2024-12-16'),
-            maxDate: new Date('2025-01-16'),
+            minDate: new Date('2025-05-12'),
+            maxDate: new Date('2025-06-12'),
             multidate: false,
             daysOfWeekHighlighted: "0, 6",
             language: 'en',
@@ -186,8 +186,8 @@
             format: 'L',
             dateFormat: 'yyyy-mm-dd',
             todayHighlight: true,
-            minDate: new Date('2025-01-17'),
-            maxDate: new Date('2025-01-22'),
+            minDate: new Date('2025-06-13'),
+            maxDate: new Date('2025-06-18'),
             multidate: false,
             daysOfWeekHighlighted: "0, 6",
             language: 'en',
