@@ -1,0 +1,72 @@
+@extends('layouts.app')
+
+@section('title', 'View Expected Graduation Letter')
+
+@section('content')
+  <h4 class="mb-6">DDSDCE Office / Expected Graduation Letter / View — {{ $expectedGraduationLetter->reference_no }}</h4>
+
+  <div class="card">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Reference No.</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->reference_no }}</dd>
+
+        <dt class="col-sm-3">Date</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->date->format('d M Y') }}</dd>
+
+        <dt class="col-sm-3">Student</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->student->name }} ({{ $expectedGraduationLetter->student->matric_no }})</dd>
+
+        <dt class="col-sm-3">Program</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->student->program->name_en ?? '—' }}</dd>
+
+        <dt class="col-sm-3">Department</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->student->department->name_en ?? '—' }}</dd>
+
+        <dt class="col-sm-3">Currently Registered</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->currentAcademicSession?->label() ?? '—' }}</dd>
+
+        <dt class="col-sm-3">Joined Semester</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->joinedAcademicSession->label() }}</dd>
+
+        <dt class="col-sm-3">Expected Graduation</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->graduation_semester_text }}</dd>
+
+        <dt class="col-sm-3">CGPA Included?</dt>
+        <dd class="col-sm-9">
+          @if ($expectedGraduationLetter->include_cgpa)
+            Yes — {{ $expectedGraduationLetter->cgpa }} ({{ $expectedGraduationLetter->cgpaAcademicSession?->label() }})
+          @else
+            No
+          @endif
+        </dd>
+
+        <dt class="col-sm-3">IA Statement Included?</dt>
+        <dd class="col-sm-9">
+          @if ($expectedGraduationLetter->include_ia_statement)
+            Yes — {{ $expectedGraduationLetter->iaAcademicSession?->label() }}
+            @if ($expectedGraduationLetter->ia_completion_date)
+              (completed by {{ $expectedGraduationLetter->ia_completion_date->format('d M Y') }})
+            @endif
+          @else
+            No
+          @endif
+        </dd>
+
+        <dt class="col-sm-3">Signatory</dt>
+        <dd class="col-sm-9">{{ $expectedGraduationLetter->signatory->name }} — {{ $expectedGraduationLetter->signatory->designation_en }}</dd>
+
+        <dt class="col-sm-3">Language</dt>
+        <dd class="col-sm-9">{{ strtoupper($expectedGraduationLetter->language) }}</dd>
+
+        <dt class="col-sm-3">Letter Content</dt>
+        <dd class="col-sm-9" style="white-space: pre-line;">{{ $expectedGraduationLetter->body_text }}</dd>
+      </dl>
+    </div>
+    <div class="card-footer d-flex gap-2">
+      <a href="{{ route('ddsdce.expected-graduation.edit', $expectedGraduationLetter) }}" class="btn btn-primary">Edit</a>
+      <a href="{{ route('ddsdce.expected-graduation.print', $expectedGraduationLetter) }}" class="btn btn-outline-primary">Print</a>
+      <a href="{{ route('ddsdce.expected-graduation.index') }}" class="btn btn-outline-secondary">Back to list</a>
+    </div>
+  </div>
+@endsection

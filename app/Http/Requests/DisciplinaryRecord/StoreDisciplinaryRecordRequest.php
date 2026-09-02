@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests\DisciplinaryRecord;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreDisciplinaryRecordRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'student_id' => ['required', 'exists:students,id'],
+            'date' => ['required', 'date'],
+            'offense_id' => ['nullable', 'exists:offenses,id'],
+            'location' => ['required', 'in:KICT,Mahallah,Centre,Others'],
+            'remarks' => ['nullable', 'string'],
+            'photos' => ['nullable', 'array', 'max:3'],
+            'photos.*' => ['image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
+        ];
+    }
+}
