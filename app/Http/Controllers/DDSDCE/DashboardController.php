@@ -8,7 +8,9 @@ use App\Models\DisciplinaryRecord;
 use App\Models\DsuStudent;
 use App\Models\ExpectedGraduationLetter;
 use App\Models\LoaLetter;
+use App\Models\ProvisionalRecord;
 use App\Models\ReadmissionLetter;
+use App\Models\ReinstateRecord;
 use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
@@ -34,6 +36,9 @@ class DashboardController extends Controller
             ->groupBy('disability_categories.id', 'disability_categories.name', 'disability_categories.code')
             ->orderByDesc('total')
             ->get();
+
+        $provisionalCount = ProvisionalRecord::count();
+        $reinstateCount = ReinstateRecord::count();
 
         $months = collect(range(5, 0))->map(fn ($i) => Carbon::now()->subMonths($i)->startOfMonth());
 
@@ -91,6 +96,20 @@ class DashboardController extends Controller
                 'date' => $d->created_at,
                 'url' => route('ddsdce.dsu.show', $d),
             ]))
+            ->concat(ProvisionalRecord::with(['student', 'academicSession'])->latest('id')->take(5)->get()->map(fn ($p) => [
+                'reference_no' => $p->academicSession->label(),
+                'type' => 'Provisional',
+                'student' => $p->student->name,
+                'date' => $p->created_at,
+                'url' => route('ddsdce.provisional.edit', $p),
+            ]))
+            ->concat(ReinstateRecord::with(['student', 'academicSession'])->latest('id')->take(5)->get()->map(fn ($r) => [
+                'reference_no' => $r->academicSession->label(),
+                'type' => 'Reinstatement',
+                'student' => $r->student->name,
+                'date' => $r->created_at,
+                'url' => route('ddsdce.reinstate.edit', $r),
+            ]))
             ->sortByDesc('date')
             ->take(8)
             ->values();
@@ -104,6 +123,8 @@ class DashboardController extends Controller
             'disciplinaryOverdueCount' => $disciplinaryOverdueCount,
             'dsuCount' => $dsuCount,
             'dsuByCategory' => $dsuByCategory,
+            'provisionalCount' => $provisionalCount,
+            'reinstateCount' => $reinstateCount,
             'totalCount' => $totalCount,
             'grandTotal' => $grandTotal,
             'monthlyLabels' => $monthlyLabels,

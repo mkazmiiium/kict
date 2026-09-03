@@ -10,7 +10,9 @@ use App\Http\Controllers\DDSDCE\DisciplinaryController;
 use App\Http\Controllers\DDSDCE\DsuStudentController;
 use App\Http\Controllers\DDSDCE\ExpectedGraduationLetterController;
 use App\Http\Controllers\DDSDCE\LoaLetterController;
+use App\Http\Controllers\DDSDCE\ProvisionalRecordController;
 use App\Http\Controllers\DDSDCE\ReadmissionLetterController;
+use App\Http\Controllers\DDSDCE\ReinstateRecordController;
 use App\Http\Controllers\Administration\ReadmissionConditionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +130,26 @@ Route::middleware('auth')->group(function () {
                 Route::post('/{disciplinaryRecord}/cancel', [DisciplinaryController::class, 'cancel'])->name('cancel');
                 Route::post('/{disciplinaryRecord}/escalate', [DisciplinaryController::class, 'escalate'])->name('escalate');
                 Route::delete('/{disciplinaryRecord}/photos/{photo}', [DisciplinaryController::class, 'destroyPhoto'])->name('photos.destroy');
+            });
+
+            Route::prefix('provisional')->name('provisional.')->group(function () {
+                Route::get('/', [ProvisionalRecordController::class, 'index'])->name('index');
+                Route::get('/export-pdf', [ProvisionalRecordController::class, 'exportPdf'])->name('export-pdf');
+                Route::get('/create', [ProvisionalRecordController::class, 'create'])->name('create');
+                Route::post('/', [ProvisionalRecordController::class, 'store'])->name('store');
+                Route::get('/{provisionalRecord}/edit', [ProvisionalRecordController::class, 'edit'])->name('edit');
+                Route::put('/{provisionalRecord}', [ProvisionalRecordController::class, 'update'])->name('update');
+                Route::delete('/{provisionalRecord}', [ProvisionalRecordController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('reinstate')->name('reinstate.')->group(function () {
+                Route::get('/', [ReinstateRecordController::class, 'index'])->name('index');
+                Route::get('/export-pdf', [ReinstateRecordController::class, 'exportPdf'])->name('export-pdf');
+                Route::get('/create', [ReinstateRecordController::class, 'create'])->name('create');
+                Route::post('/', [ReinstateRecordController::class, 'store'])->name('store');
+                Route::get('/{reinstateRecord}/edit', [ReinstateRecordController::class, 'edit'])->name('edit');
+                Route::put('/{reinstateRecord}', [ReinstateRecordController::class, 'update'])->name('update');
+                Route::delete('/{reinstateRecord}', [ReinstateRecordController::class, 'destroy'])->name('destroy');
             });
         });
 

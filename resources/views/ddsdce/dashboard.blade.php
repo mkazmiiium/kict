@@ -118,6 +118,36 @@
         </div>
       </div>
     </div>
+    <div class="col-md-4 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.provisional.index') }}" class="avatar flex-shrink-0" title="View Provisional Records">
+              <span class="avatar-initial rounded bg-label-info">
+                <i class="icon-base bx bx-timer icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Provisional Records</p>
+          <h4 class="card-title mb-0">{{ number_format($provisionalCount) }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.reinstate.index') }}" class="avatar flex-shrink-0" title="View Reinstatement Records">
+              <span class="avatar-initial rounded bg-label-success">
+                <i class="icon-base bx bx-reset icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Reinstatement Records</p>
+          <h4 class="card-title mb-0">{{ number_format($reinstateCount) }}</h4>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row">
