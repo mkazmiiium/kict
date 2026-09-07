@@ -4,27 +4,100 @@
 
 @push('page-css')
   <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/apex-charts/apex-charts.css" />
+  <style>
+    @media print {
+      #layout-menu, .layout-navbar, .content-footer, .no-print {
+        display: none !important;
+      }
+      .layout-page, .content-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .card {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+      }
+    }
+  </style>
 @endpush
 
 @section('content')
-  <h4 class="mb-6">DDSDCE Office / Dashboard</h4>
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-6">
+    <h4 class="mb-0">DDSDCE Office / Dashboard</h4>
+    <button type="button" class="btn btn-outline-secondary no-print" onclick="window.print()">
+      <i class="icon-base bx bx-printer me-1"></i> Print / Export
+    </button>
+  </div>
 
+  {{-- Headline KPIs --}}
   <div class="row">
-    <div class="col-md-4 col-sm-6 mb-6">
+    <div class="col-md-3 col-sm-6 mb-6">
       <div class="card h-100">
         <div class="card-body">
           <div class="card-title d-flex align-items-start justify-content-between mb-4">
             <div class="avatar flex-shrink-0">
               <span class="avatar-initial rounded bg-label-primary">
-                <i class="icon-base bx bx-file icon-lg"></i>
+                <i class="icon-base bx bx-briefcase-alt-2 icon-lg"></i>
               </span>
             </div>
           </div>
-          <p class="mb-1">Total Letters</p>
-          <h4 class="card-title mb-0">{{ number_format($totalCount) }}</h4>
+          <p class="mb-1">Total Case Load (All Modules)</p>
+          <h4 class="card-title mb-0">{{ number_format($grandTotal) }}</h4>
         </div>
       </div>
     </div>
+    <div class="col-md-3 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <div class="avatar flex-shrink-0">
+              <span class="avatar-initial rounded bg-label-info">
+                <i class="icon-base bx bx-calendar icon-lg"></i>
+              </span>
+            </div>
+          </div>
+          <p class="mb-1">New Records This Month</p>
+          <h4 class="card-title mb-0">
+            {{ number_format($lettersMonthly->last() + $disciplinaryMonthly->last() + $dsuMonthly->last() + $academicStandingMonthly->last() + $counsellingMonthly->last()) }}
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-6">
+      <div class="card h-100 {{ $disciplinaryOverdueCount > 0 ? 'border-danger' : '' }}">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.disciplinary.index') }}" class="avatar flex-shrink-0" title="View Disciplinary Records">
+              <span class="avatar-initial rounded bg-label-danger">
+                <i class="icon-base bx bx-error icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Overdue Disciplinary Cases</p>
+          <h4 class="card-title mb-0">{{ number_format($disciplinaryOverdueCount) }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-6">
+      <div class="card h-100 {{ $counsellingPendingEmailCount > 0 ? 'border-warning' : '' }}">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.counselling.index') }}" class="avatar flex-shrink-0" title="View Counselling Records">
+              <span class="avatar-initial rounded bg-label-warning">
+                <i class="icon-base bx bx-envelope icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Counselling Pending CCSC Email</p>
+          <h4 class="card-title mb-0">{{ number_format($counsellingPendingEmailCount) }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Per-module counters --}}
+  <div class="row">
     <div class="col-md-4 col-sm-6 mb-6">
       <div class="card h-100">
         <div class="card-body">
@@ -94,9 +167,6 @@
                 <i class="icon-base bx bx-error-circle icon-lg"></i>
               </span>
             </a>
-            @if ($disciplinaryOverdueCount > 0)
-              <span class="badge bg-label-danger">{{ $disciplinaryOverdueCount }} overdue</span>
-            @endif
           </div>
           <p class="mb-1">Disciplinary Records</p>
           <h4 class="card-title mb-0">{{ number_format($disciplinaryCount) }}</h4>
@@ -148,62 +218,82 @@
         </div>
       </div>
     </div>
+    <div class="col-md-4 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.counselling.index') }}" class="avatar flex-shrink-0" title="View Counselling Records">
+              <span class="avatar-initial rounded bg-label-dark">
+                <i class="icon-base bx bx-conversation icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Counselling Records</p>
+          <h4 class="card-title mb-0">{{ number_format($counsellingCount) }}</h4>
+        </div>
+      </div>
+    </div>
   </div>
 
+  {{-- Trend + composition --}}
   <div class="row">
     <div class="col-xxl-8 mb-6">
       <div class="card h-100">
         <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="mb-0">Activity (Last 6 Months)</h5>
+          <h5 class="mb-0">Case Volume Trend (Last 6 Months)</h5>
         </div>
         <div class="card-body">
-          <div id="lettersTrendChart"></div>
+          <div id="caseTrendChart"></div>
         </div>
       </div>
     </div>
     <div class="col-xxl-4 mb-6">
       <div class="card h-100">
         <div class="card-header">
-          <h5 class="mb-0">Records by Type</h5>
+          <h5 class="mb-0">Case Mix (All Time)</h5>
         </div>
         <div class="card-body">
-          <div class="d-flex justify-content-center">
-            <div id="lettersTypeChart"></div>
-          </div>
+          @if ($grandTotal > 0)
+            <div class="d-flex justify-content-center">
+              <div id="caseMixChart"></div>
+            </div>
+          @else
+            <p class="text-body-secondary text-center mb-0">No records yet.</p>
+          @endif
           <ul class="p-0 m-0 mt-4">
             <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bxs-circle text-success me-2"></i>
+              <i class="icon-base bx bxs-circle text-primary me-2"></i>
               <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
-                <span>Attendance</span>
-                <span class="fw-medium">{{ number_format($attendanceCount) }}</span>
+                <span>Letters</span>
+                <span class="fw-medium">{{ number_format($lettersCount) }}</span>
               </div>
             </li>
             <li class="d-flex align-items-center mb-4">
               <i class="icon-base bx bxs-circle text-info me-2"></i>
               <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
-                <span>Expected Graduation</span>
-                <span class="fw-medium">{{ number_format($expectedGraduationCount) }}</span>
+                <span>Disciplinary</span>
+                <span class="fw-medium">{{ number_format($disciplinaryCount) }}</span>
               </div>
             </li>
             <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bxs-circle text-danger me-2"></i>
+              <i class="icon-base bx bxs-circle text-success me-2"></i>
               <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
-                <span>LOA</span>
-                <span class="fw-medium">{{ number_format($loaCount) }}</span>
+                <span>DSU Students</span>
+                <span class="fw-medium">{{ number_format($dsuCount) }}</span>
               </div>
             </li>
             <li class="d-flex align-items-center mb-4">
-              <i class="icon-base bx bxs-circle text-primary me-2"></i>
+              <i class="icon-base bx bxs-circle text-secondary me-2"></i>
               <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
-                <span>Readmission</span>
-                <span class="fw-medium">{{ number_format($readmissionCount) }}</span>
+                <span>Academic Standing</span>
+                <span class="fw-medium">{{ number_format($academicStandingCount) }}</span>
               </div>
             </li>
             <li class="d-flex align-items-center">
-              <i class="icon-base bx bxs-circle text-warning me-2"></i>
+              <i class="icon-base bx bxs-circle text-dark me-2"></i>
               <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
-                <span>Disciplinary</span>
-                <span class="fw-medium">{{ number_format($disciplinaryCount) }}</span>
+                <span>Counselling</span>
+                <span class="fw-medium">{{ number_format($counsellingCount) }}</span>
               </div>
             </li>
           </ul>
@@ -212,7 +302,33 @@
     </div>
   </div>
 
+  {{-- Supporting breakdowns --}}
   <div class="row">
+    <div class="col-xxl-4 mb-6">
+      <div class="card h-100">
+        <div class="card-header">
+          <h5 class="mb-0">Needs Attention</h5>
+        </div>
+        <div class="card-body">
+          <ul class="p-0 m-0">
+            <li class="d-flex align-items-center justify-content-between mb-4">
+              <a href="{{ route('ddsdce.disciplinary.index') }}" class="text-body text-decoration-none d-flex align-items-center">
+                <i class="icon-base bx bx-error-circle text-danger me-2"></i>
+                Overdue Disciplinary Cases
+              </a>
+              <span class="badge {{ $disciplinaryOverdueCount > 0 ? 'bg-danger' : 'bg-label-secondary' }}">{{ number_format($disciplinaryOverdueCount) }}</span>
+            </li>
+            <li class="d-flex align-items-center justify-content-between">
+              <a href="{{ route('ddsdce.counselling.index') }}" class="text-body text-decoration-none d-flex align-items-center">
+                <i class="icon-base bx bx-envelope text-warning me-2"></i>
+                Counselling Pending CCSC Email
+              </a>
+              <span class="badge {{ $counsellingPendingEmailCount > 0 ? 'bg-warning' : 'bg-label-secondary' }}">{{ number_format($counsellingPendingEmailCount) }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="col-xxl-4 mb-6">
       <div class="card h-100">
         <div class="card-header d-flex align-items-center justify-content-between">
@@ -240,7 +356,38 @@
         </div>
       </div>
     </div>
-    <div class="col-xxl-8 mb-6">
+    <div class="col-xxl-4 mb-6">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Top Disciplinary Offenses</h5>
+          <a href="{{ route('ddsdce.disciplinary.index') }}" class="btn btn-icon btn-sm btn-text-secondary" title="View Disciplinary Records">
+            <i class="icon-base bx bx-right-arrow-alt"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          @if ($disciplinaryByOffense->isEmpty())
+            <p class="text-body-secondary mb-0">No disciplinary records yet.</p>
+          @else
+            <ul class="p-0 m-0">
+              @foreach ($disciplinaryByOffense as $row)
+                <li class="d-flex align-items-center {{ ! $loop->last ? 'mb-4' : '' }}">
+                  <i class="icon-base bx bxs-circle text-warning me-2"></i>
+                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
+                    <span>{{ $row->name ?? 'Unspecified' }}</span>
+                    <span class="fw-medium">{{ number_format($row->total) }}</span>
+                  </div>
+                </li>
+              @endforeach
+            </ul>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Recent activity --}}
+  <div class="row">
+    <div class="col-12 mb-6">
       <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
           <h5 class="mb-0">Recent Activity</h5>
@@ -280,8 +427,8 @@
   <script src="{{ asset('assets') }}/vendor/libs/apex-charts/apexcharts.js"></script>
   <script>
     (function () {
-      const trendEl = document.querySelector('#lettersTrendChart');
-      const typeEl = document.querySelector('#lettersTypeChart');
+      const trendEl = document.querySelector('#caseTrendChart');
+      const mixEl = document.querySelector('#caseMixChart');
 
       const cardColor = config.colors.cardColor;
       const labelColor = config.colors.textMuted;
@@ -289,14 +436,24 @@
       const borderColor = config.colors.borderColor;
       const fontFamily = config.fontFamily;
 
+      // Fixed category order + colors, reused identically across the trend
+      // and mix charts so the same category always reads the same color.
+      const categoryColors = [
+        config.colors.primary,
+        config.colors.info,
+        config.colors.success,
+        config.colors.secondary,
+        config.colors.dark
+      ];
+
       @php
         $trendPayload = [
             'categories' => $monthlyLabels->values(),
-            'attendance' => $attendanceMonthly->values(),
-            'expectedGraduation' => $expectedGraduationMonthly->values(),
-            'loa' => $loaMonthly->values(),
-            'readmission' => $readmissionMonthly->values(),
+            'letters' => $lettersMonthly->values(),
             'disciplinary' => $disciplinaryMonthly->values(),
+            'dsu' => $dsuMonthly->values(),
+            'academicStanding' => $academicStandingMonthly->values(),
+            'counselling' => $counsellingMonthly->values(),
         ];
       @endphp
       const trendData = @json($trendPayload);
@@ -304,14 +461,14 @@
       if (trendEl) {
         const trendChart = new ApexCharts(trendEl, {
           series: [
-            { name: 'Attendance', data: trendData.attendance },
-            { name: 'Expected Graduation', data: trendData.expectedGraduation },
-            { name: 'LOA', data: trendData.loa },
-            { name: 'Readmission', data: trendData.readmission },
-            { name: 'Disciplinary', data: trendData.disciplinary }
+            { name: 'Letters', data: trendData.letters },
+            { name: 'Disciplinary', data: trendData.disciplinary },
+            { name: 'DSU Students', data: trendData.dsu },
+            { name: 'Academic Standing', data: trendData.academicStanding },
+            { name: 'Counselling', data: trendData.counselling }
           ],
           chart: {
-            height: 340,
+            height: 360,
             type: 'bar',
             stacked: true,
             toolbar: { show: false }
@@ -324,7 +481,7 @@
               borderRadiusApplication: 'around'
             }
           },
-          colors: [config.colors.success, config.colors.info, config.colors.danger, config.colors.primary, config.colors.warning],
+          colors: categoryColors,
           dataLabels: { enabled: false },
           stroke: {
             show: true,
@@ -353,18 +510,21 @@
             axisBorder: { show: false }
           },
           yaxis: {
-            labels: { style: { fontSize: '13px', fontFamily: fontFamily, colors: labelColor } }
+            labels: {
+              style: { fontSize: '13px', fontFamily: fontFamily, colors: labelColor },
+              formatter: function (val) { return Math.round(val); }
+            }
           }
         });
         trendChart.render();
       }
 
-      if (typeEl) {
-        const typeChart = new ApexCharts(typeEl, {
+      if (mixEl) {
+        const mixChart = new ApexCharts(mixEl, {
           chart: { height: 165, width: 220, type: 'donut' },
-          labels: ['Attendance', 'Expected Graduation', 'LOA', 'Readmission', 'Disciplinary'],
-          series: [{{ $attendanceCount }}, {{ $expectedGraduationCount }}, {{ $loaCount }}, {{ $readmissionCount }}, {{ $disciplinaryCount }}],
-          colors: [config.colors.success, config.colors.info, config.colors.danger, config.colors.primary, config.colors.warning],
+          labels: ['Letters', 'Disciplinary', 'DSU Students', 'Academic Standing', 'Counselling'],
+          series: [{{ $lettersCount }}, {{ $disciplinaryCount }}, {{ $dsuCount }}, {{ $academicStandingCount }}, {{ $counsellingCount }}],
+          colors: categoryColors,
           stroke: { width: 5, colors: [cardColor] },
           dataLabels: {
             enabled: true,
@@ -404,7 +564,7 @@
             }
           }
         });
-        typeChart.render();
+        mixChart.render();
       }
     })();
   </script>
