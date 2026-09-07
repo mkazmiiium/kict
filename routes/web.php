@@ -5,6 +5,7 @@ use App\Http\Controllers\Administration\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Administration\OffenseController;
 use App\Http\Controllers\DDSDCE\AttendanceLetterController;
+use App\Http\Controllers\DDSDCE\CounsellingRecordController;
 use App\Http\Controllers\DDSDCE\DashboardController;
 use App\Http\Controllers\DDSDCE\DisciplinaryController;
 use App\Http\Controllers\DDSDCE\DsuStudentController;
@@ -150,6 +151,17 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{reinstateRecord}/edit', [ReinstateRecordController::class, 'edit'])->name('edit');
                 Route::put('/{reinstateRecord}', [ReinstateRecordController::class, 'update'])->name('update');
                 Route::delete('/{reinstateRecord}', [ReinstateRecordController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('counselling')->name('counselling.')->group(function () {
+                Route::get('/', [CounsellingRecordController::class, 'index'])->name('index');
+                Route::get('/export-pdf', [CounsellingRecordController::class, 'exportPdf'])->name('export-pdf');
+                Route::get('/create', [CounsellingRecordController::class, 'create'])->name('create');
+                Route::post('/', [CounsellingRecordController::class, 'store'])->name('store');
+                Route::get('/{counsellingRecord}', [CounsellingRecordController::class, 'show'])->name('show');
+                Route::get('/{counsellingRecord}/edit', [CounsellingRecordController::class, 'edit'])->name('edit');
+                Route::put('/{counsellingRecord}', [CounsellingRecordController::class, 'update'])->name('update');
+                Route::delete('/{counsellingRecord}', [CounsellingRecordController::class, 'destroy'])->name('destroy');
             });
         });
 

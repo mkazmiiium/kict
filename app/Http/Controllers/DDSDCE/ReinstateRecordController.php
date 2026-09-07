@@ -14,8 +14,8 @@ class ReinstateRecordController extends Controller
 {
     public function index(Request $request)
     {
-        $sort = $request->get('sort', 'student_name');
-        $direction = $request->get('direction') === 'desc' ? 'desc' : 'asc';
+        $sort = $request->get('sort', 'date');
+        $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
         $search = $request->get('search');
 
         $reinstateRecords = $this->filteredQuery($sort, $direction, $search)
@@ -33,8 +33,8 @@ class ReinstateRecordController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $sort = $request->get('sort', 'student_name');
-        $direction = $request->get('direction') === 'desc' ? 'desc' : 'asc';
+        $sort = $request->get('sort', 'date');
+        $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
         $search = $request->get('search');
 
         $reinstateRecords = $this->filteredQuery($sort, $direction, $search)->get();

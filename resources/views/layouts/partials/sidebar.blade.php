@@ -97,6 +97,12 @@
               <div class="text-truncate">Provisional</div>
             </a>
           </li>
+          <li class="menu-item {{ request()->routeIs('ddsdce.counselling.*') ? 'active' : '' }}">
+            <a href="{{ route('ddsdce.counselling.index') }}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-conversation"></i>
+              <div class="text-truncate">Counselling</div>
+            </a>
+          </li>
           <li class="menu-item {{ request()->routeIs('ddsdce.dsu.*') ? 'active' : '' }}">
             <a href="{{ route('ddsdce.dsu.index') }}" class="menu-link">
               <i class="menu-icon tf-icons bx bx-accessibility"></i>
