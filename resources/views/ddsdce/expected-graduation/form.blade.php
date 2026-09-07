@@ -23,7 +23,7 @@
         }
     }
 
-    $cgpaSessionOptions = $academicSessions->take(3);
+    $cgpaSessionOptions = $academicSessions->take(6);
     if ($letter && $letter->cgpa_academic_session_id && ! $cgpaSessionOptions->contains('id', $letter->cgpa_academic_session_id)) {
         $extra = $academicSessions->firstWhere('id', $letter->cgpa_academic_session_id);
         if ($extra) {
