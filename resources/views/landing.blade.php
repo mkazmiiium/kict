@@ -336,8 +336,9 @@
         <h1>Streamlining Student Affairs for the <span>DDSDCE Office</span></h1>
         <p class="lead">
           A single system for managing attendance letters, expected graduation letters, leave of
-          absence, readmission, disciplinary records and the DSU student registry — built for the
-          Kulliyyah of Information and Communication Technology.
+          absence, readmission, disciplinary records, DSU registry, provisional and reinstatement
+          monitoring, and counselling referrals — built for the Kulliyyah of Information and
+          Communication Technology.
         </p>
         <div class="hero-cta">
           <a href="{{ route('login') }}" class="btn-hero-login">
@@ -396,6 +397,21 @@
         <h3>DSU Student Registry</h3>
         <p>Maintain records for students under the Disabled Student Unit, including support needs and semester progress.</p>
       </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:#06b6d4;"><i class="icon-base bx bx-timer"></i></div>
+        <h3>Provisional Monitoring</h3>
+        <p>Track students on provisional pass status each semester, with CGPA and academic year on record.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:#65a30d;"><i class="icon-base bx bx-reset"></i></div>
+        <h3>Reinstatement</h3>
+        <p>Monitor students reinstated after suspension or termination, including the semester and CGPA of reinstatement.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:#475569;"><i class="icon-base bx bx-conversation"></i></div>
+        <h3>Counselling Referrals</h3>
+        <p>Record students referred by lecturers for counselling and track follow-up correspondence with CCSC.</p>
+      </div>
     </div>
   </section>
 
@@ -411,7 +427,7 @@
         </p>
         <div class="stat-row">
           <div class="stat">
-            <h4>6</h4>
+            <h4>9</h4>
             <span>Active Modules</span>
           </div>
           <div class="stat">
