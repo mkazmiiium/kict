@@ -449,6 +449,10 @@
         if (value < 0) cgpaValueInput.value = '0.00';
       }
 
+      function toTitleCase(str) {
+        return str.toLowerCase().replace(/(^|[\s'-])([a-z])/g, (match, separator, letter) => separator + letter.toUpperCase());
+      }
+
       function buildBodyText() {
         const student = findStudent(studentIdInput.value);
         if (!student) return;
@@ -458,11 +462,12 @@
         const pronounSubject = gender === 'male' ? 'He' : (gender === 'female' ? 'She' : 'He/She');
         const pronounPossessive = gender === 'male' ? 'His' : (gender === 'female' ? 'Her' : 'His/Her');
         const yearOfStudy = student.year_of_study ? ordinal(student.year_of_study) : '';
+        const studentName = toTitleCase(student.name || '');
 
         const paragraphs = [];
 
         paragraphs.push(
-          `This is to certify that ${salutation} ${student.name} is a ${yearOfStudy} year student in the ${student.department}, ${student.kulliyyah}, International Islamic University Malaysia (IIUM).`
+          `This is to certify that ${salutation} ${studentName} is a ${yearOfStudy} year student in the ${student.department}, ${student.kulliyyah}, International Islamic University Malaysia (IIUM).`
         );
 
         const currentOption = currentSessionSelect.options[currentSessionSelect.selectedIndex];

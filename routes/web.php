@@ -46,10 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    Route::middleware('role:Superadmin|DDAA Office')->group(function () {
-        Route::get('/ddaa', function () {
-            return view('ddaa.coming-soon');
-        })->name('ddaa.index');
+    Route::middleware('role:Superadmin|DDAI Office')->group(function () {
+        Route::get('/ddai', function () {
+            return view('ddai.coming-soon');
+        })->name('ddai.index');
     });
 
     Route::middleware('role:Superadmin|DDSDCE Office')->group(function () {

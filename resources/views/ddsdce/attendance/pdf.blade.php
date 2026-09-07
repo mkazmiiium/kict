@@ -163,7 +163,7 @@
     <tr>
       <td class="detail-label">NAMA</td>
       <td class="colon">:</td>
-      <td>{{ strtoupper($attendanceLetter->student->name) }}</td>
+      <td>{{ \Illuminate\Support\Str::title($attendanceLetter->student->name) }}</td>
     </tr>
     <tr>
       <td class="detail-label">NRIC / PASPORT</td>

@@ -155,7 +155,7 @@
     <tr>
       <td class="detail-label">NAME</td>
       <td class="colon">:</td>
-      <td>{{ strtoupper($expectedGraduationLetter->student->name) }}</td>
+      <td>{{ \Illuminate\Support\Str::title($expectedGraduationLetter->student->name) }}</td>
     </tr>
         <tr>
       <td class="detail-label">NRIC / PASSPORT</td>

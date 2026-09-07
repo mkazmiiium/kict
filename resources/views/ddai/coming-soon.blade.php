@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DDAA Office')
+@section('title', 'DDAI Office')
 
 @section('content')
   <div class="row">
@@ -12,7 +12,7 @@
               <i class="icon-base bx bx-buildings icon-lg"></i>
             </span>
           </div>
-          <h4 class="mb-2">DDAA Office</h4>
+          <h4 class="mb-2">DDAI Office</h4>
           <p class="mb-0">This module is planned for Phase 2 and is not yet available.</p>
         </div>
       </div>

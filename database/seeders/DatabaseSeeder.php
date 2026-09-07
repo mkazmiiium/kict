@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         $superadminRole = Role::firstOrCreate(['name' => 'Superadmin']);
         Role::firstOrCreate(['name' => 'DDSDCE Office']);
-        Role::firstOrCreate(['name' => 'DDAA Office']);
+        Role::firstOrCreate(['name' => 'DDAI Office']);
         Role::firstOrCreate(['name' => 'DD']);
 
         $superadmin = User::firstOrCreate(

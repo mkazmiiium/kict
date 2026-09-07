@@ -338,11 +338,15 @@
         return selected.join(', ') + ' dan ' + last;
       }
 
+      function toTitleCase(str) {
+        return str.toLowerCase().replace(/(^|[\s'-])([a-z])/g, (match, separator, letter) => separator + letter.toUpperCase());
+      }
+
       function buildBodyText() {
         const student = findStudent(studentIdInput.value);
         if (!student) return;
 
-        const name = student.name || '';
+        const name = toTitleCase(student.name || '');
         const gender = student.gender || '';
         const departmentBm = student.department_bm || '';
         const kulliyyahBm = student.kulliyyah_bm || '';

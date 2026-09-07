@@ -1,6 +1,6 @@
 @php
     $ddsdceActive = request()->routeIs('ddsdce.*');
-    $canSeeDdaa = auth()->user()->hasAnyRole(['Superadmin', 'DDAA Office']);
+    $canSeeDdai = auth()->user()->hasAnyRole(['Superadmin', 'DDAI Office']);
     $canSeeDdsdce = auth()->user()->hasAnyRole(['Superadmin', 'DDSDCE Office']);
     $canSeeAdministration = auth()->user()->hasAnyRole(['Superadmin', 'DDSDCE Office']);
     $canSeeUsers = auth()->user()->hasRole('Superadmin');
@@ -32,17 +32,17 @@
       </a>
     </li>
 
-    @if ($canSeeDdaa || $canSeeDdsdce)
+    @if ($canSeeDdai || $canSeeDdsdce)
       <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Offices</span>
       </li>
     @endif
 
-    @if ($canSeeDdaa)
-      <li class="menu-item {{ request()->routeIs('ddaa.*') ? 'active' : '' }}">
-        <a href="{{ route('ddaa.index') }}" class="menu-link">
+    @if ($canSeeDdai)
+      <li class="menu-item {{ request()->routeIs('ddai.*') ? 'active' : '' }}">
+        <a href="{{ route('ddai.index') }}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-buildings"></i>
-          <div class="text-truncate">DDAA Office</div>
+          <div class="text-truncate">DDAI Office</div>
           <div class="badge rounded-pill bg-label-secondary text-uppercase fs-tiny ms-auto">Phase 2</div>
         </a>
       </li>
