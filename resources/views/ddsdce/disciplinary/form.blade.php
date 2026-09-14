@@ -146,7 +146,6 @@
         name="photos[]"
         class="form-control @error('photos') is-invalid @enderror @error('photos.*') is-invalid @enderror"
         accept="image/*"
-        capture="environment"
         multiple />
       <div class="form-text">You can take a photo directly or choose from your gallery.</div>
     @else
