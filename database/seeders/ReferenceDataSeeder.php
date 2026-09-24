@@ -85,6 +85,14 @@ class ReferenceDataSeeder extends Seeder
             ]
         );
 
+        Signatory::firstOrCreate(
+            ['name' => 'Asst. Prof. Dr. Elin Eliana Abdul Rahim'],
+            [
+                'designation_en' => 'Covering Deputy Dean (Student Development and Community Engagement)',
+                'office' => 'DDSDCE',
+            ]
+        );
+
         Student::firstOrCreate(
             ['matric_no' => '2327038'],
             [
@@ -170,6 +178,15 @@ class ReferenceDataSeeder extends Seeder
             [
                 'name' => 'Expected Graduation Letter',
                 'reference_no_pattern' => 'IIUM/309/12/1/{running}',
+                'current_running_number' => 0,
+            ]
+        );
+
+        LetterType::firstOrCreate(
+            ['code' => 'COMPLETION', 'year' => (string) now()->year],
+            [
+                'name' => 'Completion Letter',
+                'reference_no_pattern' => 'IIUM/309/13/24/{running}',
                 'current_running_number' => 0,
             ]
         );

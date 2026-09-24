@@ -1,5 +1,5 @@
 @php
-    $letter = $expectedGraduationLetter ?? null;
+    $letter = $completionLetter ?? null;
     $displaySignatory = $letter->signatory ?? $defaultSignatory ?? null;
     $studentsForJs = $students->map(fn ($student) => [
         'id' => $student->id,
@@ -12,25 +12,6 @@
         'kulliyyah' => $student->department->kulliyyah->name_en ?? '',
     ]);
 
-    // Currently Registered / CGPA semesters are only ever recent — limit the list to
-    // the most recent sessions, but keep whatever an existing letter already has
-    // selected even if it has since fallen out of that recent window.
-    $currentSessionOptions = $academicSessions->take(6);
-    if ($letter && $letter->current_academic_session_id && ! $currentSessionOptions->contains('id', $letter->current_academic_session_id)) {
-        $extra = $academicSessions->firstWhere('id', $letter->current_academic_session_id);
-        if ($extra) {
-            $currentSessionOptions = $currentSessionOptions->push($extra);
-        }
-    }
-
-    $cgpaSessionOptions = $academicSessions->take(6);
-    if ($letter && $letter->cgpa_academic_session_id && ! $cgpaSessionOptions->contains('id', $letter->cgpa_academic_session_id)) {
-        $extra = $academicSessions->firstWhere('id', $letter->cgpa_academic_session_id);
-        if ($extra) {
-            $cgpaSessionOptions = $cgpaSessionOptions->push($extra);
-        }
-    }
-
     $iaSessionOptions = $academicSessions->take(6);
     if ($letter && $letter->ia_academic_session_id && ! $iaSessionOptions->contains('id', $letter->ia_academic_session_id)) {
         $extra = $academicSessions->firstWhere('id', $letter->ia_academic_session_id);
@@ -38,6 +19,8 @@
             $iaSessionOptions = $iaSessionOptions->push($extra);
         }
     }
+
+    $graduationStatus = old('graduation_status', $letter->graduation_status ?? 'subject_to_endorsement');
 @endphp
 
 <div class="row">
@@ -74,25 +57,6 @@
   </div>
 
   <div class="col-md-4 mb-6">
-    <label for="current_academic_session_id" class="form-label">Currently Registered Semester</label>
-    <select id="current_academic_session_id" name="current_academic_session_id" class="form-select @error('current_academic_session_id') is-invalid @enderror">
-      <option value="">Not applicable</option>
-      @foreach ($currentSessionOptions as $session)
-        <option
-          value="{{ $session->id }}"
-          data-semester="{{ $session->semester }}"
-          data-academic-year="{{ $session->academic_year }}"
-          {{ (int) old('current_academic_session_id', $letter->current_academic_session_id ?? '') === $session->id ? 'selected' : '' }}>
-          {{ $session->label() }}
-        </option>
-      @endforeach
-    </select>
-    @error('current_academic_session_id')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @enderror
-  </div>
-
-  <div class="col-md-4 mb-6">
     <label for="joined_academic_session_id" class="form-label">Joined Semester</label>
     <select id="joined_academic_session_id" name="joined_academic_session_id" class="form-select @error('joined_academic_session_id') is-invalid @enderror" required>
       <option value="">Select semester…</option>
@@ -112,85 +76,8 @@
   </div>
 
   <div class="col-md-4 mb-6">
-    <label for="graduation_semester_text" class="form-label">Expected Graduation Semester</label>
-    <input
-      type="text"
-      id="graduation_semester_text"
-      name="graduation_semester_text"
-      class="form-control @error('graduation_semester_text') is-invalid @enderror"
-      placeholder="e.g. Semester 3, 2025/2026"
-      value="{{ old('graduation_semester_text', $letter->graduation_semester_text ?? '') }}"
-      required />
-    <div class="form-text">Free text — future semesters aren't in the reference list yet.</div>
-    @error('graduation_semester_text')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @enderror
-  </div>
-
-  <div class="col-md-12 mb-3">
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        id="include_cgpa"
-        name="include_cgpa"
-        value="1"
-        {{ old('include_cgpa', $letter->include_cgpa ?? false) ? 'checked' : '' }} />
-      <label class="form-check-label" for="include_cgpa">Include CGPA statement</label>
-    </div>
-  </div>
-
-  <div class="col-md-3 mb-6" id="cgpa_session_wrap">
-    <label for="cgpa_academic_session_id" class="form-label">CGPA Semester</label>
-    <select id="cgpa_academic_session_id" name="cgpa_academic_session_id" class="form-select @error('cgpa_academic_session_id') is-invalid @enderror">
-      <option value="">Select semester…</option>
-      @foreach ($cgpaSessionOptions as $session)
-        <option
-          value="{{ $session->id }}"
-          data-semester="{{ $session->semester }}"
-          data-academic-year="{{ $session->academic_year }}"
-          {{ (int) old('cgpa_academic_session_id', $letter->cgpa_academic_session_id ?? '') === $session->id ? 'selected' : '' }}>
-          {{ $session->label() }}
-        </option>
-      @endforeach
-    </select>
-    @error('cgpa_academic_session_id')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @enderror
-  </div>
-
-  <div class="col-md-3 mb-6" id="cgpa_value_wrap">
-    <label for="cgpa" class="form-label">CGPA Value</label>
-    <input
-      type="number"
-      step="0.01"
-      min="0"
-      max="4"
-      id="cgpa"
-      name="cgpa"
-      class="form-control @error('cgpa') is-invalid @enderror"
-      value="{{ old('cgpa', $letter->cgpa ?? '') }}" />
-    @error('cgpa')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @enderror
-  </div>
-
-  <div class="col-md-12 mb-3">
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        id="include_ia_statement"
-        name="include_ia_statement"
-        value="1"
-        {{ old('include_ia_statement', $letter->include_ia_statement ?? false) ? 'checked' : '' }} />
-      <label class="form-check-label" for="include_ia_statement">Include IA statement</label>
-    </div>
-  </div>
-
-  <div class="col-md-4 mb-6" id="ia_session_wrap">
     <label for="ia_academic_session_id" class="form-label">IAP Semester</label>
-    <select id="ia_academic_session_id" name="ia_academic_session_id" class="form-select @error('ia_academic_session_id') is-invalid @enderror">
+    <select id="ia_academic_session_id" name="ia_academic_session_id" class="form-select @error('ia_academic_session_id') is-invalid @enderror" required>
       <option value="">Select semester…</option>
       @foreach ($iaSessionOptions as $session)
         <option
@@ -207,8 +94,18 @@
     @enderror
   </div>
 
-  <div class="col-md-4 mb-6" id="ia_completion_date_wrap">
-    <label for="ia_completion_date" class="form-label">IAP Completion Date (Optional)</label>
+  <div class="col-md-4 mb-6">
+    <div class="d-flex align-items-center justify-content-between">
+      <label for="ia_completion_date" class="form-label mb-0">IAP Completion Date</label>
+      <div class="form-check form-check-inline mb-0 ms-2">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="include_ia_completion_date"
+          {{ old('ia_completion_date', $letter->ia_completion_date ?? null) ? 'checked' : '' }} />
+        <label class="form-check-label" for="include_ia_completion_date">Include</label>
+      </div>
+    </div>
     <input
       type="date"
       id="ia_completion_date"
@@ -220,16 +117,57 @@
     @enderror
   </div>
 
-  <div class="col-md-6 mb-6">
-    <label for="endorsing_body_text" class="form-label">Endorsing Body (auto-filled)</label>
+  <div class="col-md-12 mb-3">
+    <label class="form-label d-block">Graduation Status</label>
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="graduation_status_endorsement"
+        name="graduation_status"
+        value="subject_to_endorsement"
+        {{ $graduationStatus === 'subject_to_endorsement' ? 'checked' : '' }} />
+      <label class="form-check-label" for="graduation_status_endorsement">Subject to Graduation Endorsement Meeting</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="graduation_status_fulfilled"
+        name="graduation_status"
+        value="fulfilled"
+        {{ $graduationStatus === 'fulfilled' ? 'checked' : '' }} />
+      <label class="form-check-label" for="graduation_status_fulfilled">Fulfilled All Graduation Requirements</label>
+    </div>
+    @error('graduation_status')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+  </div>
+
+  <div class="col-md-6 mb-6" id="graduation_semester_wrap">
+    <label for="graduation_semester_text" class="form-label">Expected Graduation Semester</label>
     <input
       type="text"
-      id="endorsing_body_text"
-      name="endorsing_body_text"
-      class="form-control @error('endorsing_body_text') is-invalid @enderror"
-      value="{{ old('endorsing_body_text', $letter->endorsing_body_text ?? 'the Senate Graduation Committee') }}"
-      readonly />
-    @error('endorsing_body_text')
+      id="graduation_semester_text"
+      name="graduation_semester_text"
+      class="form-control @error('graduation_semester_text') is-invalid @enderror"
+      placeholder="e.g. Semester 3, 2025/2026"
+      value="{{ old('graduation_semester_text', $letter->graduation_semester_text ?? '') }}" />
+    <div class="form-text">Free text — future semesters aren't in the reference list yet.</div>
+    @error('graduation_semester_text')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+  </div>
+
+  <div class="col-md-6 mb-6" id="expected_graduation_date_wrap">
+    <label for="expected_graduation_date" class="form-label">Expected Graduation Date</label>
+    <input
+      type="date"
+      id="expected_graduation_date"
+      name="expected_graduation_date"
+      class="form-control @error('expected_graduation_date') is-invalid @enderror"
+      value="{{ old('expected_graduation_date', optional($letter?->expected_graduation_date)->format('Y-m-d') ?? '') }}" />
+    @error('expected_graduation_date')
       <div class="invalid-feedback d-block">{{ $message }}</div>
     @enderror
   </div>
@@ -301,7 +239,7 @@
 
 <div class="mt-4">
   <button type="submit" class="btn btn-primary">Save</button>
-  <a href="{{ route('ddsdce.expected-graduation.index') }}" class="btn btn-outline-secondary">Cancel</a>
+  <a href="{{ route('ddsdce.completion.index') }}" class="btn btn-outline-secondary">Cancel</a>
 </div>
 
 @push('page-css')
@@ -329,20 +267,16 @@
       const studentResults = document.getElementById('student_results');
       const programPreview = document.getElementById('program_preview');
       const departmentPreview = document.getElementById('department_preview');
-      const currentSessionSelect = document.getElementById('current_academic_session_id');
       const joinedSessionSelect = document.getElementById('joined_academic_session_id');
-      const graduationSemesterInput = document.getElementById('graduation_semester_text');
-      const includeCgpaCheckbox = document.getElementById('include_cgpa');
-      const cgpaSessionSelect = document.getElementById('cgpa_academic_session_id');
-      const cgpaSessionWrap = document.getElementById('cgpa_session_wrap');
-      const cgpaValueInput = document.getElementById('cgpa');
-      const cgpaValueWrap = document.getElementById('cgpa_value_wrap');
-      const includeIaCheckbox = document.getElementById('include_ia_statement');
       const iaSessionSelect = document.getElementById('ia_academic_session_id');
-      const iaSessionWrap = document.getElementById('ia_session_wrap');
+      const includeIaCompletionDateCheckbox = document.getElementById('include_ia_completion_date');
       const iaCompletionDateInput = document.getElementById('ia_completion_date');
-      const iaCompletionDateWrap = document.getElementById('ia_completion_date_wrap');
-      const endorsingBodyInput = document.getElementById('endorsing_body_text');
+      const graduationStatusEndorsement = document.getElementById('graduation_status_endorsement');
+      const graduationStatusFulfilled = document.getElementById('graduation_status_fulfilled');
+      const graduationSemesterInput = document.getElementById('graduation_semester_text');
+      const graduationSemesterWrap = document.getElementById('graduation_semester_wrap');
+      const expectedGraduationDateInput = document.getElementById('expected_graduation_date');
+      const expectedGraduationDateWrap = document.getElementById('expected_graduation_date_wrap');
       const contactEmailInput = document.getElementById('contact_email');
       const bodyText = document.getElementById('body_text');
 
@@ -424,16 +358,16 @@
         departmentPreview.value = student ? student.department : '';
       }
 
-      function toggleCgpaFields() {
-        const show = includeCgpaCheckbox.checked;
-        cgpaSessionWrap.style.display = show ? '' : 'none';
-        cgpaValueWrap.style.display = show ? '' : 'none';
+      function toggleGraduationStatusFields() {
+        const fulfilled = graduationStatusFulfilled.checked;
+        graduationSemesterWrap.style.display = fulfilled ? 'none' : '';
+        expectedGraduationDateWrap.style.display = fulfilled ? '' : 'none';
       }
 
-      function toggleIaFields() {
-        const show = includeIaCheckbox.checked;
-        iaSessionWrap.style.display = show ? '' : 'none';
-        iaCompletionDateWrap.style.display = show ? '' : 'none';
+      function toggleIaCompletionDateField() {
+        const show = includeIaCompletionDateCheckbox.checked;
+        iaCompletionDateInput.style.display = show ? '' : 'none';
+        if (!show) iaCompletionDateInput.value = '';
       }
 
       function formatDateLong(value) {
@@ -441,14 +375,6 @@
         const [year, month, day] = value.split('-').map(Number);
         const date = new Date(year, month - 1, day);
         return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-      }
-
-      function clampCgpaValue() {
-        if (cgpaValueInput.value === '') return;
-        const value = parseFloat(cgpaValueInput.value);
-        if (isNaN(value)) return;
-        if (value > 4) cgpaValueInput.value = '4.00';
-        if (value < 0) cgpaValueInput.value = '0.00';
       }
 
       function toTitleCase(str) {
@@ -462,7 +388,6 @@
         const gender = student.gender;
         const salutation = gender === 'male' ? 'Br.' : (gender === 'female' ? 'Sr.' : 'Br./Sr.');
         const pronounSubject = gender === 'male' ? 'He' : (gender === 'female' ? 'She' : 'He/She');
-        const pronounPossessive = gender === 'male' ? 'His' : (gender === 'female' ? 'Her' : 'His/Her');
         const yearOfStudy = student.year_of_study ? ordinal(student.year_of_study) : '';
         const studentName = toTitleCase(student.name || '');
 
@@ -472,40 +397,32 @@
           `This is to certify that ${salutation} ${studentName} is a ${yearOfStudy} year student in the ${student.department}, ${student.kulliyyah}, International Islamic University Malaysia (IIUM).`
         );
 
-        const currentOption = currentSessionSelect.options[currentSessionSelect.selectedIndex];
-        const currentSentence = (currentOption && currentOption.value)
-          ? `The student is currently registered in Semester ${currentOption.dataset.semester}, ${currentOption.dataset.academicYear}.`
-          : '';
-
-        let cgpaSentence = '';
-        if (includeCgpaCheckbox.checked) {
-          const cgpaOption = cgpaSessionSelect.options[cgpaSessionSelect.selectedIndex];
-          if (cgpaOption && cgpaOption.value && cgpaValueInput.value) {
-            cgpaSentence = `${pronounPossessive} CGPA in Semester ${cgpaOption.dataset.semester}, ${cgpaOption.dataset.academicYear} was ${cgpaValueInput.value}.`;
-          }
-        }
-
-        const paragraph2 = [currentSentence, cgpaSentence].filter(Boolean).join(' ');
-        if (paragraph2) paragraphs.push(paragraph2);
-
-        if (includeIaCheckbox.checked) {
-          const iaOption = iaSessionSelect.options[iaSessionSelect.selectedIndex];
-          if (iaOption && iaOption.value) {
-            const iaSemesterLabel = `Semester ${iaOption.dataset.semester}, ${iaOption.dataset.academicYear}`;
-            const completionText = formatDateLong(iaCompletionDateInput.value);
-            paragraphs.push(
-              `${pronounSubject} is currently undergoing Industrial Attachment Programme in ${iaSemesterLabel}${completionText ? ` which will be completed by ${completionText}` : ''}.`
-            );
-          }
+        const iaOption = iaSessionSelect.options[iaSessionSelect.selectedIndex];
+        if (iaOption && iaOption.value) {
+          const iaSemesterLabel = `Semester ${iaOption.dataset.semester}, ${iaOption.dataset.academicYear}`;
+          const completionText = includeIaCompletionDateCheckbox.checked ? formatDateLong(iaCompletionDateInput.value) : '';
+          paragraphs.push(
+            `The student has successfully completed the Industrial Attachment Programme in ${iaSemesterLabel}${completionText ? ` which ended on ${completionText}` : ''}.`
+          );
         }
 
         const joinedOption = joinedSessionSelect.options[joinedSessionSelect.selectedIndex];
-        const graduationText = graduationSemesterInput.value.trim();
-        if (joinedOption && joinedOption.value && graduationText) {
-          const endorsingText = endorsingBodyInput.value.trim();
-          paragraphs.push(
-            `${pronounSubject} joined the ${student.kulliyyah} in Semester ${joinedOption.dataset.semester}, ${joinedOption.dataset.academicYear} academic session and is expected to graduate in ${graduationText} academic session${endorsingText ? `, subject to endorsement by ${endorsingText}` : ''}.`
-          );
+        if (joinedOption && joinedOption.value) {
+          const joinedSentence = `The student has joined the ${student.kulliyyah} in Semester ${joinedOption.dataset.semester}, ${joinedOption.dataset.academicYear} academic session`;
+
+          if (graduationStatusFulfilled.checked) {
+            const expectedDateText = formatDateLong(expectedGraduationDateInput.value);
+            paragraphs.push(
+              `${joinedSentence}. The student has fulfilled and completed all the requirements for graduation${expectedDateText ? ` and is expected to graduate by ${expectedDateText}` : ''}.`
+            );
+          } else {
+            const graduationText = graduationSemesterInput.value.trim();
+            if (graduationText) {
+              paragraphs.push(
+                `${joinedSentence} and is expected to graduate in ${graduationText} subject to Graduation Endorsement Meeting.`
+              );
+            }
+          }
         }
 
         const contactEmail = contactEmailInput.value.trim();
@@ -520,28 +437,26 @@
         bodyText.value = paragraphs.join('\n\n');
       }
 
-      toggleCgpaFields();
-      toggleIaFields();
+      toggleGraduationStatusFields();
+      toggleIaCompletionDateField();
 
-      includeCgpaCheckbox.addEventListener('change', function () {
-        toggleCgpaFields();
+      graduationStatusEndorsement.addEventListener('change', function () {
+        toggleGraduationStatusFields();
         buildBodyText();
       });
-      includeIaCheckbox.addEventListener('change', function () {
-        toggleIaFields();
+      graduationStatusFulfilled.addEventListener('change', function () {
+        toggleGraduationStatusFields();
         buildBodyText();
       });
-      currentSessionSelect.addEventListener('change', buildBodyText);
+      includeIaCompletionDateCheckbox.addEventListener('change', function () {
+        toggleIaCompletionDateField();
+        buildBodyText();
+      });
       joinedSessionSelect.addEventListener('change', buildBodyText);
-      graduationSemesterInput.addEventListener('change', buildBodyText);
-      cgpaSessionSelect.addEventListener('change', buildBodyText);
-      cgpaValueInput.addEventListener('change', function () {
-        clampCgpaValue();
-        buildBodyText();
-      });
       iaSessionSelect.addEventListener('change', buildBodyText);
       iaCompletionDateInput.addEventListener('change', buildBodyText);
-      endorsingBodyInput.addEventListener('change', buildBodyText);
+      graduationSemesterInput.addEventListener('change', buildBodyText);
+      expectedGraduationDateInput.addEventListener('change', buildBodyText);
       contactEmailInput.addEventListener('change', buildBodyText);
     });
   </script>

@@ -249,6 +249,7 @@ class AttendanceLetterController extends Controller
         return [
             'students' => Student::with(['program', 'department.kulliyyah'])->orderBy('name')->get(),
             'academicSessions' => AcademicSession::orderByDesc('academic_year')->orderByDesc('semester')->get(),
+            'signatories' => Signatory::where('is_active', true)->orderByDesc('id')->get(),
             'defaultSignatory' => Signatory::where('is_active', true)->orderBy('id')->first(),
         ];
     }

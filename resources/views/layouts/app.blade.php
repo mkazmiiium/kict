@@ -40,6 +40,7 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/css/core.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/demo.css" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/css/app-overrides.css" />
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />

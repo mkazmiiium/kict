@@ -84,7 +84,7 @@
       </div>
     </div>
 
-    <div class="table-responsive text-nowrap">
+    <div class="table-responsive">
       <table class="table">
         <thead class="table-light">
           <tr>

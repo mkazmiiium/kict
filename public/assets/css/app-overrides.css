@@ -1,0 +1,11 @@
+/* App-wide overrides on top of the Sneat theme (demo.css). Keep out of demo.css so template updates don't wipe it. */
+
+.table td,
+.table th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table td .d-flex {
+  justify-content: center;
+}

@@ -5,6 +5,7 @@ use App\Http\Controllers\Administration\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Administration\OffenseController;
 use App\Http\Controllers\DDSDCE\AttendanceLetterController;
+use App\Http\Controllers\DDSDCE\CompletionLetterController;
 use App\Http\Controllers\DDSDCE\CounsellingRecordController;
 use App\Http\Controllers\DDSDCE\DashboardController;
 use App\Http\Controllers\DDSDCE\DisciplinaryController;
@@ -80,6 +81,19 @@ Route::middleware('auth')->group(function () {
                 Route::delete('/{expectedGraduationLetter}', [ExpectedGraduationLetterController::class, 'destroy'])->name('destroy');
                 Route::get('/{expectedGraduationLetter}/view-pdf', [ExpectedGraduationLetterController::class, 'viewPdf'])->name('view-pdf');
                 Route::get('/{expectedGraduationLetter}/print', [ExpectedGraduationLetterController::class, 'print'])->name('print');
+            });
+
+            Route::prefix('completion-letters')->name('completion.')->group(function () {
+                Route::get('/', [CompletionLetterController::class, 'index'])->name('index');
+                Route::get('/export-pdf', [CompletionLetterController::class, 'exportPdf'])->name('export-pdf');
+                Route::get('/create', [CompletionLetterController::class, 'create'])->name('create');
+                Route::post('/', [CompletionLetterController::class, 'store'])->name('store');
+                Route::get('/{completionLetter}', [CompletionLetterController::class, 'show'])->name('show');
+                Route::get('/{completionLetter}/edit', [CompletionLetterController::class, 'edit'])->name('edit');
+                Route::put('/{completionLetter}', [CompletionLetterController::class, 'update'])->name('update');
+                Route::delete('/{completionLetter}', [CompletionLetterController::class, 'destroy'])->name('destroy');
+                Route::get('/{completionLetter}/view-pdf', [CompletionLetterController::class, 'viewPdf'])->name('view-pdf');
+                Route::get('/{completionLetter}/print', [CompletionLetterController::class, 'print'])->name('print');
             });
 
             Route::prefix('loa')->name('loa.')->group(function () {

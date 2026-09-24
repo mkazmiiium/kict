@@ -73,6 +73,12 @@
               <div class="text-truncate">Expected Graduation Letter</div>
             </a>
           </li>
+          <li class="menu-item {{ request()->routeIs('ddsdce.completion.*') ? 'active' : '' }}">
+            <a href="{{ route('ddsdce.completion.index') }}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-badge-check"></i>
+              <div class="text-truncate">Completion Letter</div>
+            </a>
+          </li>
           <li class="menu-item {{ request()->routeIs('ddsdce.loa.*') ? 'active' : '' }}">
             <a href="{{ route('ddsdce.loa.index') }}" class="menu-link">
               <i class="menu-icon tf-icons bx bx-calendar-x"></i>

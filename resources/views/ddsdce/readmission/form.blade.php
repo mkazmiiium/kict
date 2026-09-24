@@ -127,13 +127,15 @@
   </div>
 
   <div class="col-md-6 mb-6">
-    <label class="form-label">Signatory (auto-filled)</label>
-    <input
-      type="text"
-      class="form-control"
-      readonly
-      value="{{ $displaySignatory ? $displaySignatory->name.' — '.$displaySignatory->designation_en : 'No active signatory configured' }}" />
-    <input type="hidden" name="signatory_id" value="{{ $displaySignatory->id ?? '' }}" />
+    <label for="signatory_id" class="form-label">Signatory</label>
+    <select id="signatory_id" name="signatory_id" class="form-select @error('signatory_id') is-invalid @enderror" required>
+      <option value="">Select signatory…</option>
+      @foreach ($signatories as $signatory)
+        <option value="{{ $signatory->id }}" {{ (int) old('signatory_id', $displaySignatory->id ?? '') === $signatory->id ? 'selected' : '' }}>
+          {{ $signatory->name }} — {{ $signatory->designation_en }}
+        </option>
+      @endforeach
+    </select>
     @error('signatory_id')
       <div class="invalid-feedback d-block">{{ $message }}</div>
     @enderror

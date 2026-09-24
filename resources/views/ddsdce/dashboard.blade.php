@@ -30,6 +30,55 @@
     </button>
   </div>
 
+  {{-- Filter --}}
+  <div class="card mb-6 no-print">
+    <div class="card-body">
+      <form action="{{ route('ddsdce.dashboard') }}" method="GET" class="row g-3 align-items-end">
+        <div class="col-md-2 col-sm-6">
+          <label for="year" class="form-label">Year</label>
+          <select id="year" name="year" class="form-select">
+            <option value="">All years</option>
+            @foreach ($yearOptions as $value)
+              <option value="{{ $value }}" @selected($filterYear == $value)>{{ $value }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <label for="month" class="form-label">Month</label>
+          <select id="month" name="month" class="form-select">
+            <option value="">All months</option>
+            @foreach ($monthOptions as $value => $label)
+              <option value="{{ $value }}" @selected($filterMonth == $value)>{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="date_from" class="form-label">Custom Date From</label>
+          <input type="date" id="date_from" name="date_from" class="form-control" value="{{ $filterDateFrom }}" />
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="date_to" class="form-label">Custom Date To</label>
+          <input type="date" id="date_to" name="date_to" class="form-control" value="{{ $filterDateTo }}" />
+        </div>
+        <div class="col-md-2 col-sm-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary flex-grow-1">
+            <i class="icon-base bx bx-filter-alt me-1"></i> Apply
+          </button>
+          @if ($filterActive)
+            <a href="{{ route('ddsdce.dashboard') }}" class="btn btn-outline-secondary" title="Clear filter">
+              <i class="icon-base bx bx-x"></i>
+            </a>
+          @endif
+        </div>
+      </form>
+      @if ($filterActive)
+        <div class="mt-3 mb-0">
+          <span class="badge bg-label-primary">Filtered: {{ $filterSummary }}</span>
+        </div>
+      @endif
+    </div>
+  </div>
+
   {{-- Headline KPIs --}}
   <div class="row">
     <div class="col-md-3 col-sm-6 mb-6">
@@ -42,8 +91,9 @@
               </span>
             </div>
           </div>
-          <p class="mb-1">Total Case Load (All Modules)</p>
+          <p class="mb-1">Total Case Load ({{ $filterActive ? 'Filtered' : 'All Modules' }})</p>
           <h4 class="card-title mb-0">{{ number_format($grandTotal) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($grandTotalByProgram['BIT']) }} &middot; BCS: {{ number_format($grandTotalByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -57,10 +107,11 @@
               </span>
             </div>
           </div>
-          <p class="mb-1">New Records This Month</p>
+          <p class="mb-1">{{ $filterActive ? 'New Records (Filtered Period)' : 'New Records This Month' }}</p>
           <h4 class="card-title mb-0">
-            {{ number_format($lettersMonthly->last() + $disciplinaryMonthly->last() + $dsuMonthly->last() + $academicStandingMonthly->last() + $counsellingMonthly->last()) }}
+            {{ number_format($newRecordsThisMonthCount) }}
           </h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($newThisMonthByProgram['BIT']) }} &middot; BCS: {{ number_format($newThisMonthByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -76,6 +127,7 @@
           </div>
           <p class="mb-1">Overdue Disciplinary Cases</p>
           <h4 class="card-title mb-0">{{ number_format($disciplinaryOverdueCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($disciplinaryOverdueByProgram['BIT']) }} &middot; BCS: {{ number_format($disciplinaryOverdueByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -91,6 +143,7 @@
           </div>
           <p class="mb-1">Counselling Pending CCSC Email</p>
           <h4 class="card-title mb-0">{{ number_format($counsellingPendingEmailCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($counsellingPendingByProgram['BIT']) }} &middot; BCS: {{ number_format($counsellingPendingByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -110,6 +163,7 @@
           </div>
           <p class="mb-1">Attendance Letters</p>
           <h4 class="card-title mb-0">{{ number_format($attendanceCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($attendanceByProgram['BIT']) }} &middot; BCS: {{ number_format($attendanceByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -125,6 +179,23 @@
           </div>
           <p class="mb-1">Expected Graduation</p>
           <h4 class="card-title mb-0">{{ number_format($expectedGraduationCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($expectedGraduationByProgram['BIT']) }} &middot; BCS: {{ number_format($expectedGraduationByProgram['BCS']) }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.completion.index') }}" class="avatar flex-shrink-0" title="View Completion Letters">
+              <span class="avatar-initial rounded bg-label-primary">
+                <i class="icon-base bx bx-badge-check icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Completion Letters</p>
+          <h4 class="card-title mb-0">{{ number_format($completionCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($completionByProgram['BIT']) }} &middot; BCS: {{ number_format($completionByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -140,6 +211,7 @@
           </div>
           <p class="mb-1">LOA Letters</p>
           <h4 class="card-title mb-0">{{ number_format($loaCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($loaByProgram['BIT']) }} &middot; BCS: {{ number_format($loaByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -155,6 +227,7 @@
           </div>
           <p class="mb-1">Readmission Letters</p>
           <h4 class="card-title mb-0">{{ number_format($readmissionCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($readmissionByProgram['BIT']) }} &middot; BCS: {{ number_format($readmissionByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -170,6 +243,7 @@
           </div>
           <p class="mb-1">Disciplinary Records</p>
           <h4 class="card-title mb-0">{{ number_format($disciplinaryCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($disciplinaryByProgram['BIT']) }} &middot; BCS: {{ number_format($disciplinaryByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -185,6 +259,7 @@
           </div>
           <p class="mb-1">DSU Students</p>
           <h4 class="card-title mb-0">{{ number_format($dsuCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($dsuByProgram['BIT']) }} &middot; BCS: {{ number_format($dsuByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -200,6 +275,7 @@
           </div>
           <p class="mb-1">Provisional Records</p>
           <h4 class="card-title mb-0">{{ number_format($provisionalCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($provisionalByProgram['BIT']) }} &middot; BCS: {{ number_format($provisionalByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -215,6 +291,7 @@
           </div>
           <p class="mb-1">Reinstatement Records</p>
           <h4 class="card-title mb-0">{{ number_format($reinstateCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($reinstateByProgram['BIT']) }} &middot; BCS: {{ number_format($reinstateByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -230,6 +307,7 @@
           </div>
           <p class="mb-1">Counselling Records</p>
           <h4 class="card-title mb-0">{{ number_format($counsellingCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">BIT: {{ number_format($counsellingByProgram['BIT']) }} &middot; BCS: {{ number_format($counsellingByProgram['BCS']) }}</p>
         </div>
       </div>
     </div>
@@ -240,7 +318,7 @@
     <div class="col-xxl-8 mb-6">
       <div class="card h-100">
         <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="mb-0">Case Volume Trend (Last 6 Months)</h5>
+          <h5 class="mb-0">Case Volume Trend ({{ $filterActive ? $monthlyLabels->first().' – '.$monthlyLabels->last() : 'Last 6 Months' }})</h5>
         </div>
         <div class="card-body">
           <div id="caseTrendChart"></div>
@@ -250,7 +328,7 @@
     <div class="col-xxl-4 mb-6">
       <div class="card h-100">
         <div class="card-header">
-          <h5 class="mb-0">Case Mix (All Time)</h5>
+          <h5 class="mb-0">Case Mix ({{ $filterActive ? 'Filtered' : 'All Time' }})</h5>
         </div>
         <div class="card-body">
           @if ($grandTotal > 0)
@@ -392,7 +470,7 @@
         <div class="card-header d-flex align-items-center justify-content-between">
           <h5 class="mb-0">Recent Activity</h5>
         </div>
-        <div class="table-responsive text-nowrap">
+        <div class="table-responsive">
           <table class="table">
             <thead class="table-light">
               <tr>
