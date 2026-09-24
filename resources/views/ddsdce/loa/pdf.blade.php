@@ -71,9 +71,12 @@
     .signature {
       margin-top: 10px;
     }
+    .signature .name-wrap {
+      display: inline-block;
+    }
     .signature .signature-image-wrap {
       margin-bottom: -28px;
-      margin-left: 120px;
+      text-align: center;
     }
     .signature-image {
       height: 110px;
@@ -208,14 +211,16 @@
   <p>Thank you. Wassalam.</p>
 
   <div class="signature">
-    @if ($loaLetter->signatory->signature_path && file_exists(public_path($loaLetter->signatory->signature_path)))
-      <div class="signature-image-wrap">
-        <img
-          class="signature-image"
-          src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($loaLetter->signatory->signature_path))) }}" />
-      </div>
-    @endif
-    <div class="name">{{ $loaLetter->signatory->name }}</div>
+    <div class="name-wrap">
+      @if ($loaLetter->signatory->signature_path && file_exists(public_path($loaLetter->signatory->signature_path)))
+        <div class="signature-image-wrap">
+          <img
+            class="signature-image"
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($loaLetter->signatory->signature_path))) }}" />
+        </div>
+      @endif
+      <div class="name">{{ $loaLetter->signatory->name }}</div>
+    </div>
     <div class="designation">{{ $loaLetter->signatory->designation_en }}</div>
     <div class="kulliyyah">{{ $loaLetter->student->department->kulliyyah->name_en ?? '' }}</div>
     <div class="kulliyyah">International Islamic University Malaysia (IIUM)</div>

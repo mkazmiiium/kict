@@ -71,9 +71,12 @@
     .signature {
       margin-top: 10px;
     }
+    .signature .name-wrap {
+      display: inline-block;
+    }
     .signature .signature-image-wrap {
       margin-bottom: -28px;
-      margin-left: 120px;
+      text-align: center;
     }
     .signature-image {
       height: 110px;
@@ -187,14 +190,16 @@
   @endforeach
 
   <div class="signature">
-    @if ($attendanceLetter->signatory->signature_path && file_exists(public_path($attendanceLetter->signatory->signature_path)))
-      <div class="signature-image-wrap">
-        <img
-          class="signature-image"
-          src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($attendanceLetter->signatory->signature_path))) }}" />
-      </div>
-    @endif
-    <div class="name">{{ $attendanceLetter->signatory->name }}</div>
+    <div class="name-wrap">
+      @if ($attendanceLetter->signatory->signature_path && file_exists(public_path($attendanceLetter->signatory->signature_path)))
+        <div class="signature-image-wrap">
+          <img
+            class="signature-image"
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($attendanceLetter->signatory->signature_path))) }}" />
+        </div>
+      @endif
+      <div class="name">{{ $attendanceLetter->signatory->name }}</div>
+    </div>
     <div class="designation">{{ $attendanceLetter->signatory->designation_bm }}</div>
     <div class="kulliyyah">{{ $attendanceLetter->student->department->kulliyyah->name_bm ?? '' }}</div>
     <div class="kulliyyah">Universiti Islam Antarabangsa Malaysia (UIAM)</div>

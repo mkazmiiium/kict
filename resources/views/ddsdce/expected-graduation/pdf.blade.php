@@ -65,9 +65,12 @@
     .signature {
       margin-top: 10px;
     }
+    .signature .name-wrap {
+      display: inline-block;
+    }
     .signature .signature-image-wrap {
       margin-bottom: -28px;
-      margin-left: 120px;
+      text-align: center;
     }
     .signature-image {
       height: 110px;
@@ -179,14 +182,16 @@
   @endforeach
 
   <div class="signature">
-    @if ($expectedGraduationLetter->signatory->signature_path && file_exists(public_path($expectedGraduationLetter->signatory->signature_path)))
-      <div class="signature-image-wrap">
-        <img
-          class="signature-image"
-          src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($expectedGraduationLetter->signatory->signature_path))) }}" />
-      </div>
-    @endif
-    <div class="name">{{ $expectedGraduationLetter->signatory->name }}</div>
+    <div class="name-wrap">
+      @if ($expectedGraduationLetter->signatory->signature_path && file_exists(public_path($expectedGraduationLetter->signatory->signature_path)))
+        <div class="signature-image-wrap">
+          <img
+            class="signature-image"
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($expectedGraduationLetter->signatory->signature_path))) }}" />
+        </div>
+      @endif
+      <div class="name">{{ $expectedGraduationLetter->signatory->name }}</div>
+    </div>
     <div class="designation">{{ $expectedGraduationLetter->signatory->designation_en }}</div>
     <div class="kulliyyah">{{ $expectedGraduationLetter->student->department->kulliyyah->name_en ?? '' }}</div>
     <div class="kulliyyah">International Islamic University Malaysia (IIUM)</div>
