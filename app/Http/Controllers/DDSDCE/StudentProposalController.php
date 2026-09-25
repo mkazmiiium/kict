@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DDSDCE;
 use App\Http\Controllers\Concerns\HandlesProposalForm;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentProposal\UpdateStudentProposalRequest;
+use App\Http\Requests\StudentProposal\UploadFinalProposalDocumentRequest;
 use App\Models\LetterType;
 use App\Models\Proposal;
 use App\Models\ProposalAttachment;
@@ -181,6 +182,52 @@ class StudentProposalController extends Controller
 
         return view('ddsdce.student-proposal.letters', [
             'proposal' => $proposal,
+        ]);
+    }
+
+    public function editFinal(Proposal $proposal)
+    {
+        $proposal->load('finalDocumentUploader');
+
+        return view('ddsdce.student-proposal.final-edit', [
+            'proposal' => $proposal,
+        ]);
+    }
+
+    /**
+     * DDSDCE scans the finally-signed proposal (with attachments merged into
+     * one file) and keeps it here as the authoritative record — separate from
+     * the system-generated PDF, which has no physical signatures on it.
+     * Re-uploading replaces the previous file rather than keeping a history.
+     */
+    public function updateFinal(UploadFinalProposalDocumentRequest $request, Proposal $proposal)
+    {
+        if ($proposal->final_document_path) {
+            Storage::disk('public')->delete($proposal->final_document_path);
+        }
+
+        $file = $request->file('final_document');
+        $path = $file->store('proposal-final-documents', 'public');
+
+        $proposal->update([
+            'final_document_path' => $path,
+            'final_document_original_filename' => $file->getClientOriginalName(),
+            'final_document_uploaded_by' => $request->user()->id,
+            'final_document_uploaded_at' => now(),
+            'updated_by' => $request->user()->id,
+        ]);
+
+        return redirect()->route('ddsdce.student-proposal.index')
+            ->with('status', "Final signed proposal for \"{$proposal->name}\" uploaded.");
+    }
+
+    public function viewFinal(Proposal $proposal)
+    {
+        abort_unless($proposal->final_document_path, 404);
+
+        return response()->file(Storage::disk('public')->path($proposal->final_document_path), [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$proposal->final_document_original_filename.'"',
         ]);
     }
 

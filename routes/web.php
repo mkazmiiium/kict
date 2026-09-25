@@ -180,6 +180,9 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{proposal}/edit', [StudentProposalController::class, 'edit'])->name('edit');
                 Route::put('/{proposal}', [StudentProposalController::class, 'update'])->name('update');
                 Route::get('/{proposal}/letters', [StudentProposalController::class, 'letters'])->name('letters');
+                Route::get('/{proposal}/final/edit', [StudentProposalController::class, 'editFinal'])->name('final.edit');
+                Route::post('/{proposal}/final', [StudentProposalController::class, 'updateFinal'])->name('final.update');
+                Route::get('/{proposal}/final/view', [StudentProposalController::class, 'viewFinal'])->name('final.view');
                 Route::get('/{proposal}/view-pdf', [StudentProposalController::class, 'viewPdf'])->name('view-pdf');
                 Route::get('/{proposal}/print', [StudentProposalController::class, 'print'])->name('print');
                 Route::get('/{proposal}/attachments/{attachment}', [StudentProposalController::class, 'downloadAttachment'])->name('attachment');

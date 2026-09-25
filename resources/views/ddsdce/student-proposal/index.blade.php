@@ -97,6 +97,12 @@
                   <a href="{{ route('ddsdce.student-proposal.letters', $proposal) }}" class="btn btn-icon btn-sm btn-text-warning" title="View Letters">
                     <i class="icon-base bx bx-envelope"></i>
                   </a>
+                  <a
+                    href="{{ route('ddsdce.student-proposal.final.edit', $proposal) }}"
+                    class="btn btn-icon btn-sm {{ $proposal->final_document_path ? 'btn-text-success' : 'btn-text-secondary' }}"
+                    title="{{ $proposal->final_document_path ? 'Final Signed Proposal Uploaded' : 'Upload Final Signed Proposal' }}">
+                    <i class="icon-base bx {{ $proposal->final_document_path ? 'bxs-cloud-upload' : 'bx-upload' }}"></i>
+                  </a>
                 </div>
               </td>
             </tr>

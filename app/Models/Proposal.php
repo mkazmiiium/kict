@@ -68,6 +68,10 @@ class Proposal extends Model
         'approved_by_date',
         'status',
         'ddsdce_remark',
+        'final_document_path',
+        'final_document_original_filename',
+        'final_document_uploaded_by',
+        'final_document_uploaded_at',
         'needs_sponsorship_letter',
         'needs_invitation_letter',
         'needs_appointment_letter',
@@ -85,6 +89,7 @@ class Proposal extends Model
             'needs_appointment_letter' => 'boolean',
             'needs_approval_letter' => 'boolean',
             'financial_implication_amount' => 'decimal:2',
+            'final_document_uploaded_at' => 'datetime',
             'programme_date' => 'date',
             'prepared_by_date' => 'date',
             'checked_by_date' => 'date',
@@ -191,6 +196,11 @@ class Proposal extends Model
     public function approvedBySignatory(): BelongsTo
     {
         return $this->belongsTo(SignatoryProposal::class, 'approved_by_signatory_proposal_id');
+    }
+
+    public function finalDocumentUploader(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'final_document_uploaded_by');
     }
 
     public function creator(): BelongsTo
