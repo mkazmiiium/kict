@@ -12,17 +12,24 @@ use App\Http\Controllers\DDSDCE\DisciplinaryController;
 use App\Http\Controllers\DDSDCE\DsuStudentController;
 use App\Http\Controllers\DDSDCE\ExpectedGraduationLetterController;
 use App\Http\Controllers\DDSDCE\LoaLetterController;
+use App\Http\Controllers\DDSDCE\ProposalLetterController;
 use App\Http\Controllers\DDSDCE\ProvisionalRecordController;
 use App\Http\Controllers\DDSDCE\ReadmissionLetterController;
 use App\Http\Controllers\DDSDCE\ReinstateRecordController;
+use App\Http\Controllers\DDSDCE\StudentProposalController;
 use App\Http\Controllers\Administration\ReadmissionConditionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentActivity\ProposalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('dashboard')
-        : view('landing');
+    if (! auth()->check()) {
+        return view('landing');
+    }
+
+    return auth()->user()->isIctssOnly()
+        ? redirect()->route('student-activity.proposal.index')
+        : redirect()->route('dashboard');
 })->name('landing');
 
 Route::middleware('guest')->group(function () {
@@ -40,6 +47,10 @@ Route::get('/forgot-password', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        if (auth()->user()->isIctssOnly()) {
+            return redirect()->route('student-activity.proposal.index');
+        }
+
         return view('dashboard');
     })->name('dashboard');
 
@@ -51,6 +62,23 @@ Route::middleware('auth')->group(function () {
         Route::get('/ddai', function () {
             return view('ddai.coming-soon');
         })->name('ddai.index');
+    });
+
+    Route::middleware('role:Superadmin|ICTSS')->group(function () {
+        Route::prefix('student-activity')->name('student-activity.')->group(function () {
+            Route::prefix('proposals')->name('proposal.')->group(function () {
+                Route::get('/', [ProposalController::class, 'index'])->name('index');
+                Route::get('/create', [ProposalController::class, 'create'])->name('create');
+                Route::post('/', [ProposalController::class, 'store'])->name('store');
+                Route::get('/{proposal}', [ProposalController::class, 'show'])->name('show');
+                Route::get('/{proposal}/edit', [ProposalController::class, 'edit'])->name('edit');
+                Route::put('/{proposal}', [ProposalController::class, 'update'])->name('update');
+                Route::delete('/{proposal}', [ProposalController::class, 'destroy'])->name('destroy');
+                Route::get('/{proposal}/view-pdf', [ProposalController::class, 'viewPdf'])->name('view-pdf');
+                Route::get('/{proposal}/print', [ProposalController::class, 'print'])->name('print');
+                Route::get('/{proposal}/attachments/{attachment}', [ProposalController::class, 'downloadAttachment'])->name('attachment');
+            });
+        });
     });
 
     Route::middleware('role:Superadmin|DDSDCE Office')->group(function () {
@@ -145,6 +173,26 @@ Route::middleware('auth')->group(function () {
                 Route::post('/{disciplinaryRecord}/cancel', [DisciplinaryController::class, 'cancel'])->name('cancel');
                 Route::post('/{disciplinaryRecord}/escalate', [DisciplinaryController::class, 'escalate'])->name('escalate');
                 Route::delete('/{disciplinaryRecord}/photos/{photo}', [DisciplinaryController::class, 'destroyPhoto'])->name('photos.destroy');
+            });
+
+            Route::prefix('student-proposal')->name('student-proposal.')->group(function () {
+                Route::get('/', [StudentProposalController::class, 'index'])->name('index');
+                Route::get('/{proposal}/edit', [StudentProposalController::class, 'edit'])->name('edit');
+                Route::put('/{proposal}', [StudentProposalController::class, 'update'])->name('update');
+                Route::get('/{proposal}/letters', [StudentProposalController::class, 'letters'])->name('letters');
+                Route::get('/{proposal}/view-pdf', [StudentProposalController::class, 'viewPdf'])->name('view-pdf');
+                Route::get('/{proposal}/print', [StudentProposalController::class, 'print'])->name('print');
+                Route::get('/{proposal}/attachments/{attachment}', [StudentProposalController::class, 'downloadAttachment'])->name('attachment');
+            });
+
+            Route::prefix('proposal-letters')->name('proposal-letters.')->group(function () {
+                foreach (['sponsorship', 'invitation', 'appointment', 'approval'] as $letterType) {
+                    Route::prefix($letterType)->name("{$letterType}.")->group(function () use ($letterType) {
+                        Route::get('/', [ProposalLetterController::class, 'index'])->name('index')->defaults('type', $letterType);
+                        Route::get('/{proposalLetter}/view-pdf', [ProposalLetterController::class, 'viewPdf'])->name('view-pdf')->defaults('type', $letterType);
+                        Route::get('/{proposalLetter}/print', [ProposalLetterController::class, 'print'])->name('print')->defaults('type', $letterType);
+                    });
+                }
             });
 
             Route::prefix('provisional')->name('provisional.')->group(function () {

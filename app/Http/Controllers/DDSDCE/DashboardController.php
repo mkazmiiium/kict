@@ -10,6 +10,8 @@ use App\Models\DisciplinaryRecord;
 use App\Models\DsuStudent;
 use App\Models\ExpectedGraduationLetter;
 use App\Models\LoaLetter;
+use App\Models\Proposal;
+use App\Models\ProposalLetter;
 use App\Models\ProvisionalRecord;
 use App\Models\ReadmissionLetter;
 use App\Models\ReinstateRecord;
@@ -67,6 +69,28 @@ class DashboardController extends Controller
         )->count();
 
         $grandTotal = $lettersCount + $disciplinaryCount + $dsuCount + $academicStandingCount + $counsellingCount;
+
+        // Student Activity (ICTSS proposals) has no per-student link, so it can't
+        // be broken down by BIT/BCS like the other modules — kept as its own
+        // section rather than folded into $grandTotal/$grandTotalByProgram so
+        // those cards' BIT+BCS totals keep matching exactly.
+        $proposalBaseQuery = fn () => $this->applyFilters(
+            Proposal::where('status', '!=', 'draft'), 'created_at', $filterYear, $filterMonth, $filterDateFrom, $filterDateTo
+        );
+        $proposalCount = $proposalBaseQuery()->count();
+        $proposalByStatus = $proposalBaseQuery()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+        $proposalPendingReviewCount = (int) ($proposalByStatus['under_review'] ?? 0);
+        $proposalApprovedCount = (int) ($proposalByStatus['approved'] ?? 0);
+        $proposalMakeCorrectionCount = (int) ($proposalByStatus['make_correction'] ?? 0);
+
+        $proposalLettersCount = $this->filteredCount(ProposalLetter::class, 'date', $filterYear, $filterMonth, $filterDateFrom, $filterDateTo);
+        $proposalLettersByType = $this->applyFilters(ProposalLetter::query(), 'date', $filterYear, $filterMonth, $filterDateFrom, $filterDateTo)
+            ->selectRaw('type, count(*) as total')
+            ->groupBy('type')
+            ->pluck('total', 'type');
 
         // Trend chart window: an explicit date range or year picks a matching set of
         // months; otherwise fall back to the default rolling last-6-months view. A
@@ -283,6 +307,12 @@ class DashboardController extends Controller
             'academicStandingCount' => $academicStandingCount,
             'counsellingCount' => $counsellingCount,
             'counsellingPendingEmailCount' => $counsellingPendingEmailCount,
+            'proposalCount' => $proposalCount,
+            'proposalPendingReviewCount' => $proposalPendingReviewCount,
+            'proposalApprovedCount' => $proposalApprovedCount,
+            'proposalMakeCorrectionCount' => $proposalMakeCorrectionCount,
+            'proposalLettersCount' => $proposalLettersCount,
+            'proposalLettersByType' => $proposalLettersByType,
             'grandTotal' => $grandTotal,
             'monthlyLabels' => $monthlyLabels,
             'lettersMonthly' => $lettersMonthly,

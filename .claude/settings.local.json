@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(php artisan tinker '--execute= *)",
-      "Bash(php artisan *)"
+      "Bash(php artisan *)",
+      "Bash(rm public/storage)",
+      "Bash(echo \"verify-$\\(date +%s\\)\")",
+      "Read(//Applications/MAMP/htdocs/kict/public/storage/**)",
+      "Bash(rm -f storage/app/public/symlink-test.txt)"
     ]
   }
 }

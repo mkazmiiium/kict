@@ -11,6 +11,8 @@ use App\Models\Offense;
 use App\Models\Program;
 use App\Models\ReadmissionCondition;
 use App\Models\Signatory;
+use App\Models\SignatoryProposal;
+use App\Models\SocietyTerm;
 use App\Models\Student;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -91,6 +93,26 @@ class ReferenceDataSeeder extends Seeder
                 'designation_en' => 'Covering Deputy Dean (Student Development and Community Engagement)',
                 'office' => 'DDSDCE',
             ]
+        );
+
+        SignatoryProposal::firstOrCreate(
+            ['name' => 'Sr. Nuraini Hafizah Binti Ramli'],
+            ['designation_en' => 'President'],
+        );
+
+        SignatoryProposal::firstOrCreate(
+            ['name' => 'Madam Sabirah Binti Abdullah'],
+            ['designation_en' => 'Deputy Director'],
+        );
+
+        SignatoryProposal::firstOrCreate(
+            ['name' => "Prof. Emeritus Dato' Ts. Dr. Tengku Mohd Bin Tengku Sembok"],
+            ['designation_en' => 'Dean'],
+        );
+
+        SocietyTerm::firstOrCreate(
+            ['term' => '2025/2026'],
+            ['is_current' => true],
         );
 
         Student::firstOrCreate(
@@ -205,6 +227,42 @@ class ReferenceDataSeeder extends Seeder
             [
                 'name' => 'Readmission Letter',
                 'reference_no_pattern' => 'IIUM/309/C/13/18/{running}',
+                'current_running_number' => 0,
+            ]
+        );
+
+        LetterType::firstOrCreate(
+            ['code' => 'PROPOSAL_SPONSORSHIP', 'year' => (string) now()->year],
+            [
+                'name' => 'Sponsorship Letter',
+                'reference_no_pattern' => 'IIUM/309/13/24/SPN/{running}',
+                'current_running_number' => 0,
+            ]
+        );
+
+        LetterType::firstOrCreate(
+            ['code' => 'PROPOSAL_INVITATION', 'year' => (string) now()->year],
+            [
+                'name' => 'Invitation Letter',
+                'reference_no_pattern' => 'IIUM/309/13/24/INV/{running}',
+                'current_running_number' => 0,
+            ]
+        );
+
+        LetterType::firstOrCreate(
+            ['code' => 'PROPOSAL_APPOINTMENT', 'year' => (string) now()->year],
+            [
+                'name' => 'Appointment Letter',
+                'reference_no_pattern' => 'IIUM/309/13/24/APT/{running}',
+                'current_running_number' => 0,
+            ]
+        );
+
+        LetterType::firstOrCreate(
+            ['code' => 'PROPOSAL_APPROVAL', 'year' => (string) now()->year],
+            [
+                'name' => 'Approval Letter',
+                'reference_no_pattern' => 'IIUM/309/13/24/APV/{running}',
                 'current_running_number' => 0,
             ]
         );

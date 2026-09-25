@@ -311,6 +311,22 @@
         </div>
       </div>
     </div>
+    <div class="col-md-4 col-sm-6 mb-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title d-flex align-items-start justify-content-between mb-4">
+            <a href="{{ route('ddsdce.student-proposal.index') }}" class="avatar flex-shrink-0" title="View Student Proposals">
+              <span class="avatar-initial rounded bg-label-primary">
+                <i class="icon-base bx bx-inbox icon-lg"></i>
+              </span>
+            </a>
+          </div>
+          <p class="mb-1">Student Proposals</p>
+          <h4 class="card-title mb-0">{{ number_format($proposalCount) }}</h4>
+          <p class="mb-0 text-body-secondary small">Pending Review: {{ number_format($proposalPendingReviewCount) }} &middot; Letters Generated: {{ number_format($proposalLettersCount) }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   {{-- Trend + composition --}}
@@ -456,6 +472,45 @@
                   </div>
                 </li>
               @endforeach
+            </ul>
+          @endif
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-4 mb-6">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Student Proposals by Status</h5>
+          <a href="{{ route('ddsdce.student-proposal.index') }}" class="btn btn-icon btn-sm btn-text-secondary" title="View Student Proposals">
+            <i class="icon-base bx bx-right-arrow-alt"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          @if ($proposalCount === 0)
+            <p class="text-body-secondary mb-0">No submitted proposals yet.</p>
+          @else
+            <ul class="p-0 m-0">
+              <li class="d-flex align-items-center mb-4">
+                <i class="icon-base bx bxs-circle text-info me-2"></i>
+                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
+                  <span>Under Review</span>
+                  <span class="fw-medium">{{ number_format($proposalPendingReviewCount) }}</span>
+                </div>
+              </li>
+              <li class="d-flex align-items-center mb-4">
+                <i class="icon-base bx bxs-circle text-success me-2"></i>
+                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
+                  <span>Approved</span>
+                  <span class="fw-medium">{{ number_format($proposalApprovedCount) }}</span>
+                </div>
+              </li>
+              <li class="d-flex align-items-center">
+                <i class="icon-base bx bxs-circle text-warning me-2"></i>
+                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between">
+                  <span>Make Correction</span>
+                  <span class="fw-medium">{{ number_format($proposalMakeCorrectionCount) }}</span>
+                </div>
+              </li>
             </ul>
           @endif
         </div>

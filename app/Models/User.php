@@ -46,4 +46,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * True when ICTSS is the user's only functional role — used to restrict them
+     * to the Student Activity section only (no other office's menu, no generic
+     * dashboard).
+     */
+    public function isIctssOnly(): bool
+    {
+        return $this->hasRole('ICTSS')
+            && ! $this->hasAnyRole(['Superadmin', 'DDSDCE Office', 'DDAI Office']);
+    }
 }
